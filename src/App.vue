@@ -3,9 +3,14 @@
 </script>
 
 <template>
-  <div></div>
+  <router-view></router-view>
 </template>
 
-<style scoped>
-
+<style lang="scss">
+@import url("./assets/iconfont/iconfont.css");
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
 </style>
