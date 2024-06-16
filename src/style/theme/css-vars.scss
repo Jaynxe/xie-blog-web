@@ -1,0 +1,159 @@
+@import "@/style/theme/theme-animation"; //导入主题切换的动画
+/* 亮色模式 */
+html.light {
+  --login-bg: #fff;
+  --login-bg-form: #fff;
+  --login-bg-gradient: linear-gradient(
+    to right,
+    #e0eafc,
+    #94b8eb
+  ); /* 浅色主题下的渐变背景 */
+}
+/* 暗色模式演示 */
+html.dark {
+  /* 自定义深色背景颜色 */
+  --el-bg-color: rgb(30, 41, 59);
+  --el-bg-color-overlay: rgb(40, 51, 69);
+  --el-fill-color-light: rgb(15, 23, 42);
+  --el-fill-color: rgb(15, 23, 42);
+
+  --login-bg: rgb(15, 23, 42);
+  --login-bg-form: rgb(20, 28, 48); /* 更深的背景色 */
+  --login-bg-gradient: linear-gradient(
+    to right,
+    #2c3e50,
+    #4ca1af
+  ); /* 深色主题下的渐变背景 */
+
+  /* start-登录页暗色模式 */
+  .login-page {
+    background: var(--login-bg-gradient);
+  }
+
+  .login-container,
+  .reset-container,
+  .register-container {
+    background-color: var(--login-bg-form);
+    color: #ffffff; /* 确保文本颜色在深色背景下清晰 */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .title,
+  .forgot-password {
+    color: #ffffff;
+  }
+  .el-input {
+    background-color: var(--el-bg-color);
+  }
+  // .el-radio-button{
+  //   background-color: var(--el-bg-color);
+  // }
+  .input-group {
+    input {
+      background-color: var(--el-bg-color);
+      border: 1px solid #555;
+      color: #ffffff;
+    }
+
+    .placeholder {
+      color: #888888;
+    }
+
+    input:focus + .placeholder,
+    input:not(:placeholder-shown) + .placeholder {
+      color: #ffffff;
+    }
+  }
+
+  .login-button {
+    background-color: #3e8ef7;
+    border: none;
+    color: #ffffff;
+
+    &:hover {
+      background-color: #3271ad;
+    }
+  }
+  /* end-登录页暗色模式 */
+
+  /*  start-后台主页的暗色样式 */
+  .el-header {
+    background-color: var(--el-fill-color);
+  }
+
+  .el-aside {
+    background-color: var(--el-fill-color);
+
+    .el-menu-item.is-active {
+      color: #ffffff;
+      background-color: #3e8ef7 !important;
+      border-radius: 4px;
+
+      span {
+        color: #ffffff;
+      }
+    }
+
+    .el-menu-item:hover {
+      background-color: #555555;
+      border-radius: 4px;
+    }
+  }
+
+  .el-main {
+    background-color: var(--el-bg-color);
+
+    .el-card {
+      background-color: var(--el-fill-color);
+
+      .card-content {
+        background-color: var(--el-fill-color);
+      }
+    }
+  }
+
+  .tabs,
+  .copyright {
+    background-color: var(--el-fill-color);
+  }
+  /*  end-后台主页的暗色样式 */
+
+  // 面包屑的暗色样式
+  .bread span {
+    color: #ffffff;
+    cursor: pointer !important;
+  }
+
+  .el-breadcrumb_item:last-child .el-breadcrumb__inner {
+    color: #fc9105 !important;
+    font-weight: 800 !important;
+  }
+
+  // 表格的暗色样式
+  .el-table {
+    .el-table__header-wrapper th {
+      background-color: var(--el-fill-color) !important;
+    }
+
+    .el-table__row {
+      background-color: var(--el-fill-color) !important;
+    }
+  }
+
+  //分页组件的暗色样式
+  .el-pagination.is-background {
+    .btn-next.is-active,
+    .btn-prev.is-active,
+    .el-pager li.is-active {
+      --el-color-primary: #000;
+      --el-color-white: white;
+    }
+  }
+
+  .ant-result {
+    .ant-result-title,
+    .ant-result-subtitle {
+      color: white;
+    }
+  }
+}

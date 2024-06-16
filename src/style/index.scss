@@ -1,0 +1,13 @@
+@import "@/style/reset";
+// 导入基础样式
+@tailwind base;
+// 导入组件样式
+@tailwind components;
+// 导入实用工具样式
+@tailwind utilities;
+
+/* iconfont图标样式 */
+@import "@/assets/iconfont/iconfont.css";
+
+/* 进度条样式 */
+@import "./nprogress.scss";

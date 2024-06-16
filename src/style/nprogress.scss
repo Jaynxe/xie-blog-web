@@ -1,0 +1,69 @@
+/* nprogress-custom.scss */
+$primary-color: rgb(99, 248, 176); /* 主色调 */
+
+#nprogress {
+  pointer-events: none; /* 禁用指针事件，以防止进度条影响用户操作 */
+}
+
+#nprogress .bar {
+  background: $primary-color; /* 进度条的背景色 */
+  position: fixed; /* 固定位置 */
+  z-index: 1031; /* 确保进度条在其他元素之上 */
+  top: 0; /* 顶部对齐 */
+  left: 0; /* 左侧对齐 */
+  width: 100%; /* 宽度为100% */
+  height: 4px; /* 高度可以根据需要调整 */
+}
+
+#nprogress .peg {
+  display: block; /* 显示块级元素 */
+  position: absolute; /* 绝对定位 */
+  right: 0px; /* 右侧对齐 */
+  width: 100px; /* 宽度为100px */
+  height: 100%; /* 高度为100% */
+  box-shadow: 0 0 10px $primary-color, 0 0 5px $primary-color; /* 阴影颜色 */
+  opacity: 1; /* 不透明度为1 */
+
+  -webkit-transform: rotate(3deg) translate(0px, -4px); /* 旋转和平移 */
+  -ms-transform: rotate(3deg) translate(0px, -4px);
+  transform: rotate(3deg) translate(0px, -4px);
+}
+
+#nprogress .spinner {
+  display: block; /* 显示块级元素 */
+  position: fixed; /* 固定位置 */
+  z-index: 1031; /* 确保在其他元素之上 */
+  top: 10px; /* 距顶部10px */
+  left: 50%; /* 水平居中 */
+}
+
+#nprogress .spinner-icon {
+  width: 18px; /* 宽度18px */
+  height: 18px; /* 高度18px */
+  box-sizing: border-box; /* 包括边框在内计算尺寸 */
+
+  border: solid 2px transparent; /* 边框为2px透明 */
+  border-top-color: $primary-color; /* 顶部边框颜色 */
+  border-left-color: $primary-color; /* 左侧边框颜色 */
+  border-radius: 50%; /* 圆角边框 */
+
+  -webkit-animation: nprogress-spinner 400ms linear infinite; /* 旋转动画 */
+  animation: nprogress-spinner 400ms linear infinite;
+}
+
+@-webkit-keyframes nprogress-spinner {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes nprogress-spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
