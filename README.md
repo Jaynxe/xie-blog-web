@@ -5,15 +5,15 @@
 ![Static Badge](https://img.shields.io/badge/pnpm-%3E%3D9-yellow)
 
 
-## 简介
+## 简介📖
 
 这是一个基于 Vue 3 和 Element Plus 构建的开源项目，旨在为开发者提供一个高效、稳定、美观的管理系统解决方案。项目采用现代化的前后端技术栈，注重代码的可维护性和开发效率。
 
-## 技术栈
+## 技术栈💻
 
 - **前端**: Vue 3, Element Plus, Pinia, Vue Router, Axios, NProgress, ECharts, Vue I18n, Tailwind CSS, SCSS, Vite, ESLint, Prettier
 
-## 特性
+## 特性🌠
 
 - 使用 Vue 3 开发单页应用程序，利用其响应式和组件化的特点，提高开发效率和代码可维护性。
 - 使用 Element Plus 提供 UI 组件库，确保界面美观一致，提升用户体验。
@@ -54,6 +54,6 @@
 此项目采用 [MIT 许可证](LICENSE)。
 
 ## 联系方式
-
+- **后端地址**：[xie-blog](https://github.com/Jaynxe/xie-blog)
 - **作者**: 谢安
 - **邮箱**: xjy158191@126.com
