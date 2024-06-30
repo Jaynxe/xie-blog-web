@@ -1,4 +1,9 @@
-# 项目名称 xie-blog-web
+# xie-blog-web
+![Static Badge](https://img.shields.io/badge/license-MIT-green)
+![Static Badge](https://img.shields.io/badge/vue-3.4.27-green)
+![Static Badge](https://img.shields.io/badge/element%20plus-2.7.3-blue)
+![Static Badge](https://img.shields.io/badge/pnpm-%3E%3D9-yellow)
+
 
 ## 简介
 
@@ -29,7 +34,7 @@
 
 1. 克隆项目：
     ```sh
-    git clone https://github.com/你的用户名/你的项目.git
+    git clone https://github.com/Jaynxe/xie-blog-web.git
     cd 你的项目
     ```
 
