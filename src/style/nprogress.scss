@@ -1,5 +1,5 @@
-/* nprogress-custom.scss */
-$primary-color: rgb(99, 248, 176); /* 主色调 */
+/* nprogress.scss */
+$primary-color: var(--nprogress-color); /* 主色调 */
 
 #nprogress {
   pointer-events: none; /* 禁用指针事件，以防止进度条影响用户操作 */
@@ -12,23 +12,10 @@ $primary-color: rgb(99, 248, 176); /* 主色调 */
   top: 0; /* 顶部对齐 */
   left: 0; /* 左侧对齐 */
   width: 100%; /* 宽度为100% */
-  height: 4px; /* 高度可以根据需要调整 */
+  height: 3px; /* 高度可以根据需要调整 */
 }
 
-#nprogress .peg {
-  display: block; /* 显示块级元素 */
-  position: absolute; /* 绝对定位 */
-  right: 0px; /* 右侧对齐 */
-  width: 100px; /* 宽度为100px */
-  height: 100%; /* 高度为100% */
-  box-shadow: 0 0 10px $primary-color, 0 0 5px $primary-color; /* 阴影颜色 */
-  opacity: 1; /* 不透明度为1 */
-
-  -webkit-transform: rotate(3deg) translate(0px, -4px); /* 旋转和平移 */
-  -ms-transform: rotate(3deg) translate(0px, -4px);
-  transform: rotate(3deg) translate(0px, -4px);
-}
-
+/* 旋转加载图标 */
 #nprogress .spinner {
   display: block; /* 显示块级元素 */
   position: fixed; /* 固定位置 */
@@ -47,23 +34,4 @@ $primary-color: rgb(99, 248, 176); /* 主色调 */
   border-left-color: $primary-color; /* 左侧边框颜色 */
   border-radius: 50%; /* 圆角边框 */
 
-  -webkit-animation: nprogress-spinner 400ms linear infinite; /* 旋转动画 */
-  animation: nprogress-spinner 400ms linear infinite;
-}
-
-@-webkit-keyframes nprogress-spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
-@keyframes nprogress-spinner {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
 }

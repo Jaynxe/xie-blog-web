@@ -13,16 +13,17 @@ import loginCom from "@/components/auth/loginCom.vue"
   </div>
 </template>
 
-<style lang="less">
+<style lang="scss" scoped>
   .footer {
     position: fixed;
-    bottom: 0px;
+    bottom: 0;
     left: 0;
     width: 100%;
     padding: 10px 0;
     text-align: center;
     img{
       height: 16px;
+      margin-right: 5px;
     }
   }
 

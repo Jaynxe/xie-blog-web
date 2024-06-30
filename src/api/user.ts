@@ -1,27 +1,14 @@
 import service from "@/utils/request"
 import { useAuthStore } from "@/stores/auth"
-import { useRouter } from "vue-router"
-import type { AxiosRequestConfig } from "axios"
-import type { EmailLogin, RegisterDate, ResetPassword } from "@/types/define"
-const router = useRouter()
+import type { EmailLogin, RegisterData, ResetPassword } from "@/types/define"
 // 登录接口
 export function login(username: string | string[], password: string) {
-    let requestData = {}
-
-    if (username.includes("@")) {
-        requestData = { queryemail: username, password }
-    } else {
-        requestData = { name: username, password }
-    }
-
+    const requestData = { name: username, password }
     return service.post("login", requestData)
 }
 // 登出接口
-export function logout(token: string) {
-    return service.post("authrequired/user/logout", {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
+export function logout() {
+    return service.post("authrequired/user/logout",null,{
     })
 }
 // 用于刷新token
@@ -39,45 +26,34 @@ export function toRefreshToken(refreshToken: string) {
 
 // token校验,用于不需要获取数据但是需要校验的页面
 export async function isUserLoggedIn() {
-    const useAuth = useAuthStore();
-    const token = useAuth.token;
-
-    if (!token) {
-        // 如果没有token，直接返回false
-        console.warn("未找到令牌，用户未登录.");
+    const authStore = useAuthStore()
+    if (!authStore.token){
         return false;
     }
-
-    const config: AxiosRequestConfig = {
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    };
-
     try {
-        const res = await service.get("/isValid", config);
+        const res = await service.get("/isValid");
         if (res.data.status === 0) {
-            useAuth.setCheckTokenData(res.data.data);
-            return true; // Token is valid
+            authStore.setCheckTokenData(res.data.data);
+            return true; // Token 有效
         }
-        console.warn("令牌验证失败，状态无效:", res.data.status);
-        return false; // Invalid status
     } catch (error: any) {
-        console.error("验证令牌时出错:", error);
-        useAuth.deleteToken();
-
-        // 错误码为7，无权限访问，跳转到403
-        if (error.response && error.response.data && error.response.data.status === 7) {
-            ElNotification({
-                title: "错误",
-                message: "无权限访问",
-                type: "error",
-                duration: 5000,
+        // 服务器内部错误
+        if(error.response.data.status === 1) {
+            ElMessage({
+                message:error.response.data.msg,
+                type:"error",
+                duration:3000,
             });
-            router.push({ path: "/403" });
         }
-
-        return false; // Token is invalid
+        if(error.response.data.status === 2) {
+            ElMessage({
+                message:"登录失效,请重新登录",
+                type:"warning",
+                duration:3000,
+            });
+        }
+        authStore.deleteToken();
+        return false; // Token 无效
     }
 }
 
@@ -86,10 +62,9 @@ export const generateResetPasswordCode = (email: string) => {
     return service.post(`resetPassword`, { email });
 };
 
-
-// 提交密码重置表单
+// 提交重置密码表单
 export const submitResetPasswordForm = (formData: ResetPassword) => {
-    return service.post('resetPassword', formData, { withCredentials: true });
+    return service.post('resetPassword', formData);
 };
 
 // 生成邮箱登录的验证码请求
@@ -98,7 +73,7 @@ export const generateEmailLoginCode = (email: string) => {
 };
 // 提交邮箱验证码登录表单
 export const submitEmailLoginForm = (formData: EmailLogin) => {
-    return service.post('loginWithEmail', formData, { withCredentials: true });
+    return service.post('loginWithEmail', formData);
 };
 
 // 生成注册的验证码请求
@@ -106,16 +81,29 @@ export const generateRegisterCode = (email: string) => {
     return service.post(`register`, { email });
 };
 // 提交注册表单
-export const submitRegisterForm = (formData: RegisterDate) => {
-    return service.post('register', formData, { withCredentials: true });
+export const registerUser = (formData: RegisterData) => {
+    return service.post('register', formData);
 };
+
+
 //获取用户信息
-export const getUserInfo = (token: string) => {
-    return service.get("authrequired/user/getUserInfo",
-        {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        }
-    )
+export const getUserInfo = () => {
+    return service.get("authrequired/user/getUserInfo")
 }
+
+//用户列表
+export const getUserList = () => {
+    return service.get("authrequired/admin/getAllUsers")
+}
+// 批量删除用户
+export const batchDeleteUser = (id_list:number[]) => {
+    return service.delete("authrequired/admin/batchDeleteUser",{
+        data: {
+            id_list,
+        }
+    })
+}
+// 管理员新增用户
+export const adminRegisterUser = (formData:RegisterData) => {
+    return service.post('authrequired/admin/registerUser', formData);
+};

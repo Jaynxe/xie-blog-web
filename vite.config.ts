@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from 'node:url'
 import path from 'path';
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import Icons from 'unplugin-icons/vite'
@@ -11,57 +11,69 @@ import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 import Inspect from 'vite-plugin-inspect'
 
 const pathSrc = path.resolve(__dirname, 'src')
-
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue(),
-    vueJsx(),
-    // element-plus 自动导入
-    AutoImport({
-      // Auto import functions from Vue, e.g. ref, reactive, toRef...
-      // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
-      imports: ['vue'],
 
-      // Auto import functions from Element Plus, e.g. ElMessage, ElMessageBox... (with style)
-      // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
-      resolvers: [
-        ElementPlusResolver(),
+export default defineConfig(configEnv=> {
+  const viteEnv = loadEnv(configEnv.mode, process.cwd());
+  const baseUrl = viteEnv.VITE_SERVICE_BASE_URL //后端的地址
+  return {
+    envPrefix: ["VITE_"],
+    plugins: [
+      vue(),
+      vueJsx(),
+      // element-plus 自动导入
+      AutoImport({
+        // Auto import functions from Vue, e.g. ref, reactive, toRef...
+        // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+        imports: ['vue'],
 
-        // Auto import icon components
-        // 自动导入图标组件
-        IconsResolver({
-          prefix: 'Icon',
-        }),
-      ],
+        // Auto import functions from Element Plus, e.g. ElMessage, ElMessageBox... (with style)
+        // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+        resolvers: [
+          ElementPlusResolver(),
 
-      dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
-    }),
+          // Auto import icon components
+          // 自动导入图标组件
+          IconsResolver({
+            prefix: 'Icon',
+          }),
+        ],
 
-    Components({
-      resolvers: [
-        // Auto register icon components
-        // 自动注册图标组件
-        IconsResolver({
-          enabledCollections: ['ep'],
-        }),
-        // Auto register Element Plus components
-        // 自动导入 Element Plus 组件
-        ElementPlusResolver(),
-      ],
+        dts: path.resolve(pathSrc, 'auto-imports.d.ts'),
+      }),
 
-      dts: path.resolve(pathSrc, 'components.d.ts'),
-    }),
+      Components({
+        resolvers: [
+          // Auto register icon components
+          // 自动注册图标组件
+          IconsResolver({
+            enabledCollections: ['ep'],
+          }),
+          // Auto register Element Plus components
+          // 自动导入 Element Plus 组件
+          ElementPlusResolver(),
+        ],
 
-    Icons({
-      autoInstall: true,
-    }),
+        dts: path.resolve(pathSrc, 'components.d.ts'),
+      }),
 
-    Inspect(),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+      Icons({
+        autoInstall: true,
+      }),
+
+      Inspect(),
+    ],
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url))
+      }
+    },
+    server: {
+      proxy: {
+        '/uploads': {
+          target: baseUrl,
+        }
+      }
     }
-  },
+  }
 })

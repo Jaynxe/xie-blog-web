@@ -1,13 +1,13 @@
 import type { UserInfo } from "@/types/define";
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 
 export const useAuthStore = defineStore("auth", () => {
-
+    // 定义状态变量
     const token = ref<string | null>(localStorage.getItem("token"));
     const scope = ref<string | null>(localStorage.getItem("scope"));
     const refreshToken = ref<string | null>(localStorage.getItem("refreshToken"));
-    const expiredAt = ref<number>(parseInt(localStorage.getItem("expiredAt") || '0', 10));
+    const expired_at = ref<number>(parseInt(localStorage.getItem("expiredAt") || '0', 10));
     const userInfo = reactive<UserInfo>({
         email: "",
         id: 0,
@@ -16,79 +16,89 @@ export const useAuthStore = defineStore("auth", () => {
         role: "",
         sex: "",
         avatar: "",
-        nickName: ""
+        nick_name: ""
     });
-    const isLogin = ref<boolean>(false)
+    const rememberMe = ref<boolean>(localStorage.getItem("rememberMe") === "true");
 
-    function setData(data: { token: string; scope: string; refresh_token: string; expiredAt: number; }) {
-        const { token: newToken, scope: newScope, refresh_token: newRefreshToken, expiredAt: newExpiredAt } = data;
+    // 设置数据并同步到localStorage
+    function setData(data: { token: string; scope: string; refresh_token: string; expired_at: number; }) {
+        const { token: newToken, scope: newScope, refresh_token: newRefreshToken, expired_at: newExpiredAt } = data;
         token.value = newToken;
         scope.value = newScope;
         refreshToken.value = newRefreshToken;
-        expiredAt.value = newExpiredAt;
-        isLogin.value = true
-        // 同步到 localStorage
+        expired_at.value = newExpiredAt;
+
+        // 同步到 localStorage 实现信息持久化保存
         localStorage.setItem("token", newToken);
         localStorage.setItem("scope", newScope);
         localStorage.setItem("refreshToken", newRefreshToken);
         localStorage.setItem("expiredAt", newExpiredAt.toString());
     }
 
-    function setCheckTokenData(ui: any) {
-        Object.assign(userInfo, ui)
+    // 设置用户信息
+    function setCheckTokenData(ui: Partial<UserInfo>) {
+        Object.assign(userInfo, ui);
         // 如果需要，可以同步到 localStorage
     }
 
+    // 获取存储的数据
     function getData() {
         return {
             token: token.value,
             scope: scope.value,
             refreshToken: refreshToken.value,
-            expiredAt: expiredAt.value,
+            expiredAt: expired_at.value,
         };
     }
 
+    // 获取用户信息
     function getCheckTokenData() {
         return userInfo;
     }
 
+    // 获取 token
     function getToken() {
         return token.value;
     }
 
+    // 获取 scope
     function getScope() {
         return String(scope.value);
     }
 
+    // 获取 refresh token
     function getRefreshToken() {
         return refreshToken.value;
     }
 
+    // 获取 token 过期时间
     function getExpiredAt() {
-        return expiredAt.value;
+        return expired_at.value;
     }
 
+    // 删除 token 及相关数据
     function deleteToken() {
         token.value = null;
         scope.value = null;
         refreshToken.value = null;
-        expiredAt.value = 0;
-        isLogin.value = false;
+        expired_at.value = 0;
+        rememberMe.value = false;
 
         // 从 localStorage 删除
         localStorage.removeItem("token");
         localStorage.removeItem("scope");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("expiredAt");
+        localStorage.removeItem("rememberMe");
     }
 
     return {
         token,
         scope,
         refreshToken,
-        expiredAt,
+        expired_at,
         userInfo,
-        isLogin,
+        rememberMe,
         setData,
         setCheckTokenData,
         getData,

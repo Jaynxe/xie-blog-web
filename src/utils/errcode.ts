@@ -3,7 +3,7 @@ import { type ErrorCodeType } from '@/types/define';
 export const errorCode: ErrorCodeType = {
   0: "没有发生错误",
   1: "服务器内部错误",
-  2: "Token 错误",
+  2: "登录失效,请重新登录",
   3: "参数错误",
   4: "用户已存在",
   5: "用户不存在",

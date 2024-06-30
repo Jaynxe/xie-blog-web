@@ -1,13 +1,15 @@
-@import "@/style/theme/theme-animation"; //导入主题切换的动画
 /* 亮色模式 */
 html.light {
   --login-bg: #fff;
   --login-bg-form: #fff;
   --login-bg-gradient: linear-gradient(
     to right,
-    #e0eafc,
-    #94b8eb
+    #d8e4fb,
+    #8bb3ed
   ); /* 浅色主题下的渐变背景 */
+
+  /* 进度条背景色 */
+  --nprogress-color:rgb(99, 248, 176);
 }
 /* 暗色模式演示 */
 html.dark {
@@ -25,6 +27,12 @@ html.dark {
     #4ca1af
   ); /* 深色主题下的渐变背景 */
 
+  /* 暗色模式进度条背景色 */
+  --nprogress-color:rgb(5, 74, 192);
+
+  .el-calendar{
+    background-color: rgb(15, 23, 42);
+  }
   /* start-登录页暗色模式 */
   .login-page {
     background: var(--login-bg-gradient);
@@ -56,7 +64,7 @@ html.dark {
     }
 
     .placeholder {
-      color: #888888;
+      color: #888;
     }
 
     input:focus + .placeholder,
@@ -111,7 +119,9 @@ html.dark {
       }
     }
   }
-
+ .el-footer{
+   background-color: var(--el-fill-color);
+ }
   .tabs,
   .copyright {
     background-color: var(--el-fill-color);
@@ -132,28 +142,14 @@ html.dark {
   // 表格的暗色样式
   .el-table {
     .el-table__header-wrapper th {
-      background-color: var(--el-fill-color) !important;
+      background-color: var(--el-bg-color) !important;
+      color: #fff;
     }
-
+    border-color:var(--el-bg-color);
     .el-table__row {
       background-color: var(--el-fill-color) !important;
     }
   }
 
-  //分页组件的暗色样式
-  .el-pagination.is-background {
-    .btn-next.is-active,
-    .btn-prev.is-active,
-    .el-pager li.is-active {
-      --el-color-primary: #000;
-      --el-color-white: white;
-    }
-  }
 
-  .ant-result {
-    .ant-result-title,
-    .ant-result-subtitle {
-      color: white;
-    }
-  }
 }

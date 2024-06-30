@@ -1,16 +1,19 @@
 <script setup lang='ts'>
 import { reactive, onMounted } from 'vue';
 import * as echarts from 'echarts/core';
-import { LineChart } from 'echarts/charts';
-import { } from 'echarts/components';
+import { LineChart, BarChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
 import { type WeatherData } from '@/types/define'
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
+// 引入图表组件
+echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer, TitleComponent]);
 
 const authStore = useAuthStore();
-echarts.use([LineChart, GridComponent, TooltipComponent, CanvasRenderer, TitleComponent]);
+// 卡片主体样式
+/* 定义天气部分的属性 */
+const date = ref(new Date())
 let weatherData = reactive<WeatherData>({
   city: '',
   reporttime: '',
@@ -18,66 +21,49 @@ let weatherData = reactive<WeatherData>({
   weather: ''
 })//天气数据
 let loading = ref(true); // 用于加载天气
-const cardBodyStyle = {
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-} as const;
-/* 项目依赖数据 */
-const dependencies: { name: string, version: string }[] = reactive([
-  {
-    name: 'vue',
-    version: '^3.4.21',
-  },
-  {
-    name: 'element-plus',
-    version: '^2.7.3',
-  },
-  {
-    name: 'vue-router',
-    version: '^4.3.0',
-  },
-  {
-    name: 'pinia',
-    version: '^2.1.7',
-  },
-  {
-    name: 'less',
-    version: '^4.2.0',
-  },
-  {
-    name: 'vueuse',
-    version: '^10.9.0',
-  },
-  {
-    name: 'axios',
-    version: '^1.7.2',
-  },
-  {
-    name: 'echarts',
-    version: '^5.5.0',
-  },
+// 获取当地天气
+async function getWeather() {
+  let req = await axios.get("https://restapi.amap.com/v3/weather/weatherInfo?city=440100&key=9e887ea2d26d9b862ae41c91d911e00f&extensions=base&output=JSON"
+  )
+  const { city, reporttime, temperature, weather } = req.data.lives[0];
 
-])
-/* 网站流量数据 */
-const flowData = reactive([
-  ['2024-02-01', 2200],
-  ['2024-03-01', 4000],
-  ['2024-04-01', 8000],
-  ['2024-05-01', 9000],
-  ['2024-06-01', 10000],
-  ['2024-07-01', 6000],
-],)
-let flowChart = ref()
-let flowChartIns: echarts.EChartsType
-/* 卡片展示数据 */
+  const wd: WeatherData = {
+    city,
+    reporttime,
+    temperature,
+    weather
+  };
+  Object.assign(weatherData, wd)
+  loading.value = false; // 加载完成
+}
+// 展示的天气图标
+const weatherIcon = computed(() => {
+  const weather = weatherData.weather as keyof typeof weatherMap;
+  const weatherMap = {
+    '晴': 'Sunny',
+    '多云': 'PartlyCloudy',
+    '阴': 'MostlyCloudy',
+    '大雨': 'Pouring',
+    '小雨': 'Drizzling',
+    '雨': 'Drizzling',
+    '中雨': 'Pouring',
+    '雪': 'Drizzling',
+    '雷阵雨': 'Lightning',
+    '中雨-大雨':'Pouring'
+  };
+  return weatherMap[weather] || 'Sunny';
+});
+
+/* 小卡片展示部分 */
+// 小卡片展示数据
 const cards = reactive([
-  { icon: 'icon-yonghuzongshu', label: '用户总数', value: '36,000', percentage: '+88%', trendIcon: "TopRight", chartData: [10, 52, 200, 334, 390, 430, 520] },
-  { icon: 'icon-wenzhang', label: '文章总数', value: '5670', percentage: '+12%', trendIcon: "TopRight", chartData: [5, 10, 16, 18, 24, 27, 30] },
-  { icon: 'icon-tubiaozhizuomoban-', label: '近七天登录', value: '1260', percentage: '+5%', trendIcon: "TopRight", chartData: [12, 32, 21, 54, 33, 26, 44] },
-  { icon: 'icon-xinzengyonghu', label: '近七天新增', value: '570', percentage: '-2%', trendIcon: "BottomRight", chartData: [8, 15, 17, 25, 20, 18, 24] },
+  { icon: 'icon-yonghuzongshu', label: '用户总数', value: 36000, percentage: '+88%', trendIcon: "TopRight", chartData: [10, 52, 200, 334, 390, 430, 520] },
+  { icon: 'icon-wenzhang', label: '文章总数', value: 5670, percentage: '+12%', trendIcon: "TopRight", chartData: [5, 10, 16, 18, 24, 27, 30] },
+  { icon: 'icon-tubiaozhizuomoban-', label: '近七天登录', value: 1260, percentage: '+5%', trendIcon: "TopRight", chartData: [12, 32, 21, 54, 33, 26, 44] },
+  { icon: 'icon-xinzengyonghu', label: '近七天注册', value: 570, percentage: '-2%', trendIcon: "BottomRight", chartData: [8, 15, 17, 25, 20, 18, 24] },
 ]);
-/* 用于存放echarts实例 */
+
+/* 用于存放小图echarts实例 */
 const chartInstances: echarts.ECharts[] = [];
 
 const renderChart = (chartEl: HTMLElement | null | undefined, data: number[]) => {
@@ -99,7 +85,6 @@ const renderChart = (chartEl: HTMLElement | null | undefined, data: number[]) =>
       symbol: 'none',
       lineStyle: {
         width: 2,
-        // color: '#00aaff',
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
           { offset: 0, color: 'rgba(0, 170, 255, 1)' },
           { offset: 0.5, color: 'rgba(0, 170, 255, 0.5)' },
@@ -123,7 +108,7 @@ const renderChart = (chartEl: HTMLElement | null | undefined, data: number[]) =>
   });
   return chart;
 };
-/* 设置 */
+/* 设置每一个小图 */
 const setupCharts = () => {
   cards.forEach((card, index) => {
     const chartEl = document.getElementById(`chart-${index}`);
@@ -133,7 +118,39 @@ const setupCharts = () => {
     }
   });
 };
+// 定义 greet 方法
+const greet = computed(() => {
+  const hours = new Date().getHours();
+  const name = authStore.userInfo.name;
+  if (hours >= 5 && hours < 9) {
+    return `早上好,${name},今天又是充满活力的一天!`;
+  } else if (hours >= 9 && hours < 12) {
+    return `上午好,${name},保持元气满满哦!`;
+  } else if (hours >= 12 && hours < 14) {
+    return `中午好,${name},记得吃午饭哦!`;
+  } else if (hours >= 14 && hours < 18) {
+    return `下午好,${name},今天的工作顺利吗?`;
+  } else if (hours >= 18 && hours < 21) {
+    return `傍晚好,${name},工作辛苦了,放松一下吧!`;
+  } else if (hours >= 21 && hours < 23) {
+    return `晚上好,${name},今天过得怎么样?`;
+  } else {
+    return `夜深了,${name},该休息了,晚安!`;
+  }
+});
+
 /* 网站流量图 */
+// 网站流量数据
+const flowData = reactive([
+  ['2024-02-01', 2200],
+  ['2024-03-01', 4000],
+  ['2024-04-01', 8000],
+  ['2024-05-01', 9000],
+  ['2024-06-01', 10000],
+  ['2024-07-01', 6000],
+],)
+let flowChart = ref()
+let flowChartIns: echarts.EChartsType
 const flowCharts = () => {
   if (flowChart.value) {
     flowChartIns = echarts.init(flowChart.value);
@@ -238,11 +255,72 @@ const flowCharts = () => {
     flowChartIns.setOption(option);
   }
 }
+
+/* 注册人员分布柱状图 */
+let distributionChart = ref()
+let registerChartIns: echarts.EChartsType
+const registerCharts = () => {
+  if (distributionChart.value) {
+    registerChartIns = echarts.init(distributionChart.value);
+    const option = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: {
+          type: 'line',
+        },
+        borderWidth: 1,
+        textStyle: {
+          color: '#333',
+        },
+      },
+      grid: {
+        top: '5%',
+        left: '3%',
+        right: '4%',
+        bottom: 0,
+        containLabel: true,
+      },
+      xAxis: {
+        type: 'category',
+        data: ['北京', '上海', '广东', '江苏', '浙江', '吉林'],
+        boundaryGap: ["10%", "10%"],
+      },
+      yAxis: {
+        type: 'value',
+        splitLine: {
+          show: true,
+          lineStyle: {
+            width: 0.3,
+            color: 'rgba(101, 101, 101, 0.5)',
+            type: 'solid',
+          },
+        },
+      },
+      series: [
+        {
+          data: [565, 325, 557, 346, 977, 122],
+          type: 'bar',
+          itemStyle: {
+            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+              { offset: 0, color: '#00aaff' },
+              { offset: 1, color: 'rgba(0, 170, 255, 0.1)' },
+            ]),
+          },
+          barWidth: '40%',
+        },
+      ],
+    };
+
+    registerChartIns.setOption(option);
+  }
+};
+
 /* 用于接收到天气数据后渲染组件 */
 onMounted(() => {
   setupCharts();
   getWeather();
   flowCharts();
+  registerCharts();
 });
 onUnmounted(() => {
   /* 销毁echarts实例 */
@@ -250,259 +328,73 @@ onUnmounted(() => {
     chart.dispose();
   });
   flowChartIns.dispose();
-});
-/* 获取当地天气 */
-async function getWeather() {
-  let req = await axios.get("https://restapi.amap.com/v3/weather/weatherInfo?city=440100&key=9e887ea2d26d9b862ae41c91d911e00f&extensions=base&output=JSON"
-  )
-  const { city, reporttime, temperature, weather } = req.data.lives[0];
-
-  const wd: WeatherData = {
-    city,
-    reporttime,
-    temperature,
-    weather
-  };
-  Object.assign(weatherData, wd)
-  loading.value = false; // 加载完成
-}
-// 定义 greet 方法
-const greet = computed(() => {
-  const hours = new Date().getHours();
-  const name = authStore.userInfo.name;
-  if (hours >= 5 && hours < 9) {
-    return `早上好,${name},今天又是充满活力的一天!`;
-  } else if (hours >= 9 && hours < 12) {
-    return `上午好,${name},保持元气满满哦!`;
-  } else if (hours >= 12 && hours < 14) {
-    return `中午好,${name},记得吃午饭哦!`;
-  } else if (hours >= 14 && hours < 18) {
-    return `下午好,${name},今天的工作顺利吗?`;
-  } else if (hours >= 18 && hours < 21) {
-    return `傍晚好,${name},工作辛苦了,放松一下吧!`;
-  } else if (hours >= 21 && hours < 23) {
-    return `晚上好,${name},今天过得怎么样?`;
-  } else {
-    return `夜深了,${name},该休息了,晚安!`;
-  }
-});
-const weatherIcon = computed(() => {
-  const weather = weatherData.weather as keyof typeof weatherMap;
-  const weatherMap = {
-    '晴': 'Sunny',
-    '多云': 'PartlyCloudy',
-    '阴': 'MostlyCloudy',
-    '大雨': 'Pouring',
-    '小雨': 'Drizzling',
-    '雨': 'Drizzling',
-    '中雨': 'Pouring',
-    '雪': 'Drizzling',
-    '雷雨': 'Lightning'
-  };
-  return weatherMap[weather] || 'Sunny';
+  registerChartIns.dispose();
 });
 
 </script>
 
 <template>
-  <div class="welcome">
-    <el-card shadow="hover">
-      <div class="card-content">
-        <p>{{ greet }}</p>
-        <div v-if="!loading" class="weather-info">
+  <div class="welcome mb-1 bg-white rounded">
+    <el-card class="relative h-64 flex flex-col justify-center items-center bg-welcome-bg bg-center bg-contain bg-no-repeat" shadow="hover">
+      <div class="card-content absolute left-2.5 top-2.5 p-2.5 rounded">
+        <p class="text-xl font-semibold">{{ greet }}</p>
+        <div v-if="!loading" class="weather-info flex items-center mt-2.5 text-base">
           {{ weatherData.city }} - {{ weatherData.reporttime }} - {{ weatherData.temperature }}°C - {{
             weatherData.weather }}
-          <el-icon>
+          <el-icon class="ml-1 text-xl">
             <component :is="weatherIcon" />
           </el-icon>
         </div>
       </div>
     </el-card>
   </div>
-  <div class="data-preview">
-    <el-card v-for="(card, index) in cards" :key="index" shadow="hover" :body-style="cardBodyStyle">
-      <div class="card-header">
-        <p>{{ card.label }}</p>
-        <i :class="['iconfont', card.icon]"></i>
+
+  <div class="data-preview flex flex-wrap gap-1 mb-1 w-full">
+    <el-card v-for="(card, index) in cards" :key="index" shadow="hover" class="flex-1 max-w-1/4 min-w-50 box-border p-0">
+      <div class="card-header flex items-center justify-between w-full">
+        <p class="font-bold">{{ card.label }}</p>
+        <i :class="['iconfont', card.icon, 'mr-1 text-2xl text-sky-500 font-medium']"></i>
       </div>
-      <div class="card-body">
-        <div class="left-section">
-          <p class="value">{{ card.value }}</p>
-          <span class="percentage"
-            :class="{ positive: card.percentage.includes('+'), negative: card.percentage.includes('-') }">{{
-              card.percentage }} <el-icon>
+      <div class="card-body flex justify-between items-center w-full">
+        <div class="left-section flex-1">
+          <p class="value text-lg font-light my-2.5"><el-statistic :value="card.value" /></p>
+          <span class="flex items-center percentage font-bold" :class="{ 'text-green-500': card.percentage.includes('+'), 'text-red-500': card.percentage.includes('-') }">
+            {{ card.percentage }}
+            <el-icon class="inline ml-1.5">
               <component :is="card.trendIcon" />
-            </el-icon></span>
+            </el-icon>
+          </span>
         </div>
-        <div class="right-section">
-          <div :id="`chart-${index}`" class="mini-chart"></div>
+        <div class="right-section flex-1 flex justify-end items-center">
+          <div :id="`chart-${index}`" class="mini-chart w-full h-12 mt-2.5"></div>
         </div>
       </div>
     </el-card>
   </div>
-  <div class="data-visual">
-    <el-card class="Pro-Dependencies" shadow="hover">
-      <el-scrollbar>
-        <el-table :data="dependencies" stripe height="250" style="width: 100%">
-          <el-table-column prop="name" label="依赖名称"></el-table-column>
-          <el-table-column prop="version" label="版本"></el-table-column>
-        </el-table>
-      </el-scrollbar>
 
-    </el-card>
-    <el-card class="flow" shadow="hover">
-      <template #header>网站流量</template>
-      <div ref="flowChart" class="chart"></div>
-    </el-card>
+  <div class="data-visual flex w-full h-160 gap-1 ">
+    <div class="visual-left w-1/2 flex flex-col gap-1">
+      <el-card class="flow w-full h-80" shadow="hover">
+        <template #header>网站流量</template>
+        <div ref="flowChart" class="chart h-80 text-black"></div>
+      </el-card>
+      <el-card class="register-distribution flex-1 h-56 w-full" shadow="hover">
+        <template #header>注册人员分布前六地区</template>
+        <div ref="distributionChart" class="chart h-56 text-black"></div>
+      </el-card>
+    </div>
+    <el-calendar v-model="date" ref="calendar" class="calendar-date w-1/2 h-full border border-gray-200 rounded">
+      <template #date-cell="{ data }">
+        <p :class="data.isSelected ? 'is-selected' : ''">
+          {{ data.day.split('-').slice(1).join('-') }}
+          {{ data.isSelected ? '✔️' : '' }}
+          {{ data.day.split('-').slice(1).join('-') === "10-27" ? '🎂' : '' }}
+        </p>
+      </template>
+    </el-calendar>
   </div>
-
 </template>
 
-<style lang="scss" scoped>
-
-  /* 欢迎卡片 */
-  .welcome {
-    margin-bottom: 5px;
-    background: white; // 使用渐变背景
-    border-radius: 5px; // 圆角
-
-    .el-card {
-      position: relative;
-      height: 250px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      background: url("/src/assets/img/welcome.png") no-repeat center center;
-      background-size: contain;
-
-      .card-content {
-        position: absolute;
-        left: 10px;
-        top: 10px;
-        padding: 10px;
-        border-radius: 5px;
-
-        p {
-          font-size: 24px;
-          font-weight: bold;
-        }
-
-        .weather-info {
-          display: flex;
-          align-items: center;
-          font-size: 1em;
-          margin-top: 10px;
-        }
-
-        .weather-info .el-icon {
-          margin-left: 5px;
-          font-size: 1.5em;
-        }
-
-      }
-    }
-  }
-
-  /* 四个数据展示卡片 */
-  .data-preview {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-    margin-bottom: 5px;
-    width: 100%;
-
-    .el-card {
-      flex: 1 1 calc(25% - 4px);
-      max-width: calc(25% - 4px);
-      min-width: 200px;
-      box-sizing: border-box;
-      padding: 0;
-
-      .card-header {
-        display: flex;
-        justify-content: space-between;
-        width: 100%;
-
-        p {
-          font-weight: 700;
-        }
-
-        i.iconfont {
-          margin-right: 5px;
-          font-size: 25px;
-          color: #00aaff;
-          font-weight: 500;
-        }
-      }
-
-      .card-body {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-
-        .left-section {
-          flex: 1;
-        }
-
-        .right-section {
-          flex: 1;
-          display: flex;
-          justify-content: flex-end;
-          align-items: center;
-        }
-
-        .value {
-          font-size: 22px;
-          font-weight: 300;
-          margin: 10px 0;
-        }
-
-        .percentage {
-          font-weight: 700;
-
-          &.positive {
-            color: rgb(34 197 94);
-          }
-
-          &.negative {
-            color: #ff0000;
-          }
-        }
-
-        .mini-chart {
-          width: 100%;
-          height: 50px;
-          margin-top: 10px;
-        }
-      }
-    }
-  }
-
-  .data-visual {
-    display: flex;
-    justify-content: space-between;
-    gap: 5px;
-
-    .el-card {
-      height: 300px;
-    }
-
-    .Pro-Dependencies {
-      width: 40%;
-    }
-
-    .flow {
-      flex: 1;
-
-      .chart {
-        height: 300px;
-        color: #000;
-      }
-    }
-
-  }
-
-
+<style scoped>
+/* 去除 scoped 样式，改用 Tailwind CSS */
 </style>

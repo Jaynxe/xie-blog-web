@@ -1,14 +1,13 @@
 <script setup lang='ts'>
 import * as echarts from 'echarts';
-import { onMounted, ref } from 'vue';
-import { defineProps } from 'vue';
+import {defineProps, onMounted, ref} from 'vue';
 
 const props = defineProps<{ type: 'line' | 'bar' }>();
 
 const chartRef = ref<HTMLDivElement | null>(null);
 
 const getOption = (type: 'line' | 'bar') => {
-  const commonOptions = {
+  return {
     title: {
       text: type === 'line' ? '用户增长趋势' : '文章发布趋势',
       left: 'center',
@@ -35,7 +34,6 @@ const getOption = (type: 'line' | 'bar') => {
       },
     ],
   };
-  return commonOptions;
 };
 
 onMounted(() => {
@@ -51,6 +49,6 @@ onMounted(() => {
   <div ref="chartRef" style="width: 100%; height: 400px;"></div>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
   /* 确保图表在父容器中正确展示 */
 </style>

@@ -1,14 +1,12 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 
-/* 存储侧边栏缩放的状态 */
 export const useCollapseStore = defineStore('collapse', () => {
-    // 初始默认为 false，即为展开状态
-    const isCollapse = ref(false);
+    const isCollapse = ref(localStorage.getItem('isCollapse') === 'true');
 
-    // 切换侧边栏状态的函数
     function toggleCollapse() {
         isCollapse.value = !isCollapse.value;
+        localStorage.setItem('isCollapse', String(isCollapse.value)); // 实现持久化保存
     }
 
     return { isCollapse, toggleCollapse };

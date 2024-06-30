@@ -1,79 +1,3 @@
-<template>
-  <div class="reset-password-page">
-    <div class="reset-container">
-      <div class="reset-main">
-        <div class="form-container">
-          <div class="form-top">
-            <div class="title">重置密码</div>
-            <div class="right">
-              <theme />
-            </div>
-          </div>
-          <el-divider />
-          <el-form :model="resetPasswordForm" :rules="rules" ref="formRef" label-width="1px"
-            class="reset-password-form">
-            <el-form-item prop="email">
-              <el-input v-model="resetPasswordForm.email" placeholder="邮箱" size="large">
-                <template #prefix>
-                  <el-icon>
-                    <Promotion />
-                  </el-icon>
-                </template>
-              </el-input>
-            </el-form-item>
-            <el-form-item prop="verificationCode">
-              <el-row :gutter="5">
-                <el-col :span="isButtonDisabled ? 14 : 16">
-                  <el-input v-model="resetPasswordForm.verificationCode" placeholder="验证码" size="large">
-                    <template #prefix>
-                      <el-icon>
-                        <Message />
-                      </el-icon>
-                    </template>
-                  </el-input>
-                </el-col>
-                <el-col :span="isButtonDisabled ? 10 : 8">
-                  <el-button type="primary" :disabled="isButtonDisabled" @click="getVerifyCode" size="large">
-                    {{
-                      isButtonDisabled
-                        ? `${countdown}秒后重新获取`
-                        : "获取验证码"
-                    }}
-                  </el-button>
-                </el-col>
-              </el-row>
-            </el-form-item>
-            <el-form-item prop="newPassword">
-              <el-input v-model="resetPasswordForm.newPassword" type="password" placeholder="密码" show-password size="large">
-                <template #prefix>
-                  <el-icon>
-                    <Lock />
-                  </el-icon>
-                </template>
-              </el-input>
-            </el-form-item>
-            <el-form-item prop="confirmPassword">
-              <el-input v-model="resetPasswordForm.confirmPassword" type="password" placeholder="确认密码" show-password size="large">
-                <template #prefix>
-                  <el-icon>
-                    <Lock />
-                  </el-icon>
-                </template>   
-              </el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" :disabled="!canSubmit" @click="submitForm" size="large">确定</el-button>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="default" @click="goBack" size="large">返回</el-button>
-            </el-form-item>
-          </el-form>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script lang="ts" setup>
 import { ref, computed, reactive } from "vue";
 import { ElMessage, type FormInstance, type FormRules } from "element-plus";
@@ -85,15 +9,14 @@ import { errorCode } from "@/utils/errcode";
 
 const router = useRouter();
 
-const formRef = ref<FormInstance>();
 const resetPasswordForm = reactive<ResetPassword>({
   email: "",
   verificationCode: "",
-  newPassword: "",
-  confirmPassword: "",
+  new_password: "",
+  confirm_password: "",
 });
-
-const rules: FormRules = {
+const formRef = ref<FormInstance>();
+const rules = reactive<FormRules<ResetPassword>>({
   email: [
     { required: true, message: "请输入邮箱", trigger: "blur" },
     { type: "email", message: "请输入有效的邮箱地址", trigger: "blur" },
@@ -101,12 +24,12 @@ const rules: FormRules = {
   verificationCode: [
     { required: true, message: "请输入验证码", trigger: "blur" },
   ],
-  newPassword: [{ required: true, message: "请输入新密码", trigger: "blur" }],
-  confirmPassword: [
+  new_password: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+  confirm_password: [
     { required: true, message: "请确认新密码", trigger: "blur" },
     {
       validator: (rule, value, callback) => {
-        if (value !== resetPasswordForm.newPassword) {
+        if (value !== resetPasswordForm.new_password) {
           callback(new Error("两次输入的密码不一致"));
         } else {
           callback();
@@ -115,12 +38,31 @@ const rules: FormRules = {
       trigger: "blur",
     },
   ],
-};
+})
 
+const showMessage = (message: string, type: 'success' | 'warning' | 'info' | 'error') => {
+  ElMessage({
+    message,
+    type,
+    duration: 3000,
+  });
+};
+// 处理错误逻辑
+const handleError = (error: any) => {
+  if (error.response && error.response.data && error.response.data.status) {
+    if (error.response.data.status === 1){
+      showMessage(error.response.data.reason, "error");
+    }else{
+      showMessage(errorCode[error.response.data.status] || "未知错误", "error");
+    }
+  } else {
+    showMessage("请求失败，请稍后再试.", "error");
+  }
+};
 const canSubmit = computed(() => {
-  const { email, verificationCode, newPassword, confirmPassword } =
+  const { email, verificationCode, new_password, confirm_password } =
     resetPasswordForm;
-  return Boolean(email && verificationCode && newPassword && confirmPassword);
+  return Boolean(email && verificationCode && new_password && confirm_password);
 });
 
 const countdown = ref(60);
@@ -130,35 +72,17 @@ let timer: ReturnType<typeof setInterval> | null = null;
 const getVerifyCode = async () => {
   if (isButtonDisabled.value) return;
 
-  generateResetPasswordCode(resetPasswordForm.email)
-    .then((res) => {
-      if (res.data.status === 0) {
-        ElMessage({
-          message: "验证码获取成功",
-          type: "success",
-          duration: 3000,
-        });
-        startCountdown();
-      }
-    })
-    .catch((error) => {
-      console.log(error)
-      if (error.response.data.status === 5) {
-          ElMessage({
-            message: errorCode[error.response.data.status],
-            type: "error",
-            duration: 3000,
-          });
-        }
-      if (error.response.data.status === 1) {
-        ElMessage({
-          message: "验证码获取失败",
-          type: "error",
-          duration: 3000,
-        });
-      }
-    });
+  try {
+    const res = await generateResetPasswordCode(resetPasswordForm.email);
+    if (res.data.status === 0) {
+      showMessage("验证码获取成功", "success");
+      startCountdown();
+    }
+  } catch (error:any) {
+    handleError(error)
+  }
 };
+
 /* 用于获取验证码按钮的计时 */
 const startCountdown = () => {
   isButtonDisabled.value = true;
@@ -172,110 +96,115 @@ const startCountdown = () => {
   }, 1000);
 };
 
-const submitForm = async () => {
-  const isValid = await formRef.value?.validate();
-  if (isValid) {
-    submitResetPasswordForm(resetPasswordForm)
-      .then((res) => {
-        if (res.data.status === 0) {
-          ElMessage({
-            message: "密码重置成功",
-            type: "success",
-            duration: 3000,
-          });
-          router.push({ name: "login" });
-        }
-      })
-      .catch((error) => {
-          ElMessage({
-            message: errorCode[error.response.data.status],
-            type: "error",
-            duration: 3000,
-          });
-        // 服务器内部错误
-        if (error.response.data.status === 1) {
-          ElMessage({
-            message: error.response.data.reason,
-            type: "error",
-            duration: 3000,
-          });
-        }
-      
+const submitForm = async (formEl: FormInstance | undefined) => {
+  if (!formEl) return; // 如果 formEl 不存在，直接返回，不执行后续逻辑
+
+  try {
+    const valid = await new Promise<boolean>((resolve) => {
+      formEl?.validate((valid) => {
+        resolve(valid);
       });
-  } else {
-    ElMessage.error("请检查表单的输入");
+    });
+
+    if (valid) {
+      const res = await submitResetPasswordForm(resetPasswordForm);
+      if (res.data.status === 0) {
+        showMessage("密码重置成功", "success");
+        await router.push({ name: "login" });
+      }
+    } else {
+      showMessage("请检查表单的输入", "error");
+    }
+  } catch (error:any) {
+    handleError(error)
   }
 };
+
 
 const goBack = () => {
   router.push({ path: "/login" });
 };
 </script>
 
+<template>
+  <div class="reset-password-page h-screen flex flex-col justify-center items-center ">
+    <div class="reset-container w-full max-w-lg flex justify-center bg-white p-5 rounded-lg  ">
+      <div class="reset-main w-4/5 flex flex-col items-center p-y-5 px-0">
+        <div class="form-container w-full">
+          <div class="form-top flex justify-between items-center mb-5">
+            <span class="title text-2xl text-sky-500 font-bold">重置密码</span>
+            <theme />
+          </div>
+          <el-divider />
+          <el-form :model="resetPasswordForm" :rules="rules" ref="formRef"
+                   class="form-main w-full">
+            <el-form-item prop="email">
+              <el-input v-model="resetPasswordForm.email" placeholder="邮箱" size="large">
+                <template #prefix>
+                  <el-icon>
+                    <Promotion />
+                  </el-icon>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="verificationCode">
+              <el-row :gutter="5" class="w-full">
+                <el-col :span="isButtonDisabled ? 14 : 16" class="flex items-center">
+                  <el-input v-model="resetPasswordForm.verificationCode" placeholder="验证码" size="large">
+                    <template #prefix>
+                      <el-icon>
+                        <Message />
+                      </el-icon>
+                    </template>
+                  </el-input>
+                </el-col>
+                <el-col :span="isButtonDisabled ? 10 : 8" class="flex items-center">
+                  <el-button class="w-full" type="primary" :disabled="isButtonDisabled" @click="getVerifyCode" size="large">
+                    {{
+                      isButtonDisabled
+                          ? `${countdown}秒后重新获取`
+                          : "获取验证码"
+                    }}
+                  </el-button>
+                </el-col>
+              </el-row>
+            </el-form-item>
+            <el-form-item prop="new_password">
+              <el-input v-model="resetPasswordForm.new_password" type="password" placeholder="密码" show-password size="large">
+                <template #prefix>
+                  <el-icon>
+                    <Lock />
+                  </el-icon>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item prop="confirm_password">
+              <el-input v-model="resetPasswordForm.confirm_password" type="password" placeholder="确认密码" show-password size="large">
+                <template #prefix>
+                  <el-icon>
+                    <Lock />
+                  </el-icon>
+                </template>
+              </el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button class="w-full" type="primary" :disabled="!canSubmit" @click="submitForm(formRef)" size="large">确定</el-button>
+            </el-form-item>
+            <el-form-item>
+              <el-button class="w-full" @click="goBack" size="large">返回</el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <style lang="scss" scoped>
   .reset-password-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
     background: var(--login-bg-gradient);
   }
-
   .reset-container {
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    max-width: 500px;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 40px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  }
-
-  .reset-main {
-    width: 80%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 0 20px;
-  }
-
-  .form-container {
-    width: 100%;
-  }
-
-  .form-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 24px;
-    color: var(--el-color-primary);
-    letter-spacing: 1px;
-    font-weight: bold;
-    margin-bottom: 20px;
-
-    .title {
-      font-size: 24px;
-      font-weight: bold;
-      color: #2575fc;
-    }
-  }
-
-  .reset-password-form {
-    width: 100%;
-  }
-
-  .el-row {
-    width: 100%;
-  }
-
-  .el-col {
-    display: flex;
-    align-items: center;
-  }
-
-  .el-button {
-    width: 100%;
   }
 </style>

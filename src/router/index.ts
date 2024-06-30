@@ -13,26 +13,43 @@ const router = createRouter({
       path: "/login",
       name: "login",
       redirect: "/login/pwd",
+      beforeEnter:async (to,from) => {
+          const loggedIn = await isUserLoggedIn();
+          if (loggedIn) {
+            ElMessage({
+              message: '您已登录，无需再次登录',
+              type: 'warning',
+              duration: 3000,
+            });
+            return {path:from.path}; // 阻止导航
+          } else {
+            return true;
+          }
+      },
       children: [
         {
           path: "/login/pwd",
           name: "loginPwd",
           component: () => import("@/views/login/loginPwd.vue"),
+          meta: {title:"密码登录" } // 添加meta属性
         },
         {
           path: "/login/email",
           name: "loginEmail",
           component: () => import("@/views/login/loginEmail.vue"),
+          meta: {title:"邮箱登录" } // 添加meta属性
         },
         {
           path: "/login/forgetPassword",
           name: "forgetPassword",
-          component: () => import("@/views/login/forgetPassword.vue")
+          component: () => import("@/views/login/forgetPassword.vue"),
+          meta: {title:"重置密码" } // 添加meta属性
         },
         {
           path: "/login/signup",
           name: "signup",
-          component: () => import("@/views/login/register.vue")
+          component: () => import("@/views/login/register.vue"),
+          meta: {title:"用户注册" } // 添加meta属性
         },
       ],
     },
@@ -40,12 +57,20 @@ const router = createRouter({
     {
       path: "/:pathMatch(.*)*",
       name: "NotFound",
-      component: () => import("@/views/exception/404.vue")
+      component: () => import("@/views/exception/404.vue"),
+      meta: {title:"404" } // 添加meta属性
     },
     {
       path: "/exception/403",
       name: "Forbidden",
-      component: () => import("@/views/exception/403.vue")
+      component: () => import("@/views/exception/403.vue"),
+      meta: {title:"403" } // 添加meta属性
+    },
+    {
+      path: "/exception/500",
+      name: "ServerError",
+      component: () => import("@/views/exception/500.vue"),
+      meta: {title:"500" } // 添加meta属性
     },
     // 博客前端后台
     {
@@ -57,67 +82,82 @@ const router = createRouter({
         {
           path: "/admin/home",
           name: "adminHome",
-          component: () => import("@/views/admin/home/home.vue")
+          component: () => import("@/views/admin/home/home.vue"),
+          meta: { requireAuth: true, title:"后台首页" } // 添加meta属性
         },
         {
           path: "/admin/userManage",
           name: "userManage",
-          component: () => import("@/views/admin/user/userManage.vue")
+          component: () => import("@/views/admin/user/userManage.vue"),
+          meta: { requireAuth: true, role:"admin", title:"用户管理" } // 添加meta属性
         },
         {
           path: "/admin/userInfo",
           name: "userInfo",
-          component: () => import("@/views/admin/user/userInfo.vue")
+          component: () => import("@/views/admin/user/userInfo.vue"),
+          meta: { requireAuth: true , title:"用户信息"} // 添加meta属性
         },
         {
           path: "/admin/userCollection",
           name: "userCollection",
-          component: () => import("@/views/admin/user/userCollection.vue")
+          component: () => import("@/views/admin/user/userCollection.vue"),
+          meta: { requireAuth: true, role:"admin" , title:"用户收藏"} // 添加meta属性
         },
         {
           path: "/admin/userPost",
           name: "userPost",
-          component: () => import("@/views/admin/user/userPost.vue")
+          component: () => import("@/views/admin/user/userPost.vue"),
+          meta: { requireAuth: true, role:"admin" , title:"用户发布"} // 添加meta属性
         },
         {
           path: "/admin/siteInfo",
           name: "siteInfo",
-          component: () => import("@/views/admin/site/siteInfo.vue")
+          component: () => import("@/views/admin/site/siteInfo.vue"),
+          meta: { requireAuth: true, title:"关于" } // 添加meta属性
         },
         {
           path: "/admin/articleManage",
           name: "articleManage",
-          component: () => import("@/views/admin/article/articleManage.vue")
+          component: () => import("@/views/admin/article/articleManage.vue"),
+          meta: { requireAuth: true, role:"admin", title:"文章管理"} // 添加meta属性
         },
-      ]
+      ],
     },
+
     // 前台路由
     {
       path: "/home",
       name:"home",
       component: () => import("@/views/web/home.vue"),
+      meta: { title:"xie-blog"} // 添加meta属性
     }
   ]
 })
-
-
-router.beforeEach(async (to, from, next) => {
-  start();//开启进度条
-  const loggedIn = await isUserLoggedIn();
-  const loginRoutes:string[] = ['login', 'loginPwd', 'loginEmail', 'forgetPassword', 'signup'];
-  if ((loginRoutes.includes(to.name as string) || to.path.startsWith('/login')) && loggedIn) {
-    ElMessage({
-      message: '您已登录，无需再次登录',
-      type: 'warning',
-      duration: 3000,
-    });
-    // console.log(from.path)
-    next({ path:from.path }); // 重定向到主页或其他已登录用户可以访问的页面
+/* 全局前置守卫 */
+router.beforeEach(async (to) => {
+  start(); // 开启进度条
+  if (to.meta.requireAuth) {
+    const isLogin = await isUserLoggedIn();  // 判断是否登录
+    if (isLogin) {
+      if (to.meta.role === "admin")
+        if(localStorage.getItem("scope") === "admin"){
+          return true;
+        }else {
+          return({ name: "Forbidden" });
+        }
+      return true;
+    } else {
+      return ({name: "login"});
+    }
   } else {
-    next(); // 继续导航
+    return true;
   }
 });
-router.afterEach(() => {
+
+/* 全局后置守卫 */
+router.afterEach((to) => {
   close()//关闭进度条
+  document.title = to.meta.title as string
 })
+
 export default router

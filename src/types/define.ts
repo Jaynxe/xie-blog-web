@@ -21,22 +21,27 @@ export type ErrorCodeType = {
 export interface ResetPassword {
   email: string
   verificationCode: string
-  newPassword: string
-  confirmPassword: string
+  new_password: string
+  confirm_password: string
 }
 export interface EmailLogin {
   email: string
   verificationCode: string
 }
-
-export interface RegisterDate {
+export interface PasswordLogin{
+  username: string
+  email: string
+  password: string
+}
+export interface RegisterData {
   name: string
   email: string
   verificationCode: string
   password: string
-  confirmPassword: string
-  nickName: string,
+  confirm_password: string
+  nick_name: string,
   sex: string,
+  role:string,
 }
 export interface UserInfo {
   email: string
@@ -46,8 +51,24 @@ export interface UserInfo {
   role: string
   sex: string
   avatar: string
-  nickName: string
+  nick_name: string
 }
-
+// 用于用户管理获取用户的信息
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  nick_name: string;
+  sex: string;
+  avatar: string;
+  ip: string;
+  role: string;
+  created_at: string;
+}
+// 用户管理搜索表单
+export interface SearchForm {
+  username: string;
+  phone: string;
+}
 export interface WeatherMap{
 }
