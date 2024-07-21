@@ -4,11 +4,12 @@ import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 import {Lock, Promotion, Message, User} from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { generateRegisterCode, registerUser } from "@/api";
-import {type RegisterData} from "@/types/define";
+import {type RegisterUser} from "@/types";
+import theme from "@/components/theme"
 import { errorCode } from "@/utils/errcode";
 
 const router = useRouter();
-const registerForm = reactive<RegisterData>({
+const registerForm = reactive<RegisterUser>({
   name: "",
   email: "",
   verificationCode: "",
@@ -20,7 +21,7 @@ const registerForm = reactive<RegisterData>({
 });
 const formRef = ref<FormInstance>();// 注册表单的实例
 // 注册表单规则
-const rules = reactive<FormRules<RegisterData>>({
+const rules = reactive<FormRules<RegisterUser>>({
   name: [
     { required: true, message: "请输入姓名", trigger: "blur" },
   ],
@@ -138,7 +139,7 @@ const goBack = () => {
 
 <template>
   <div class="register-page flex flex-col justify-center items-center h-screen ">
-    <div class="register-container flex justify-center w-full max-w-lg bg-white p-5 rounded-lg">
+    <div class="register-container flex justify-center w-1/3 bg-white py-5 rounded-3xl">
       <div class="register-main w-4/5 flex flex-col items-center">
         <div class="form-container w-full">
 

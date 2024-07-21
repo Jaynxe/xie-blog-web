@@ -10,6 +10,9 @@ html.light {
 
   /* 进度条背景色 */
   --nprogress-color:rgb(99, 248, 176);
+
+  --tab-text-color:#6B7280;
+  
 }
 /* 暗色模式演示 */
 html.dark {
@@ -29,6 +32,7 @@ html.dark {
 
   /* 暗色模式进度条背景色 */
   --nprogress-color:rgb(5, 74, 192);
+  --tab-text-color: #94A3B8;
 
   .el-calendar{
     background-color: rgb(15, 23, 42);
@@ -96,7 +100,6 @@ html.dark {
       color: #ffffff;
       background-color: #3e8ef7 !important;
       border-radius: 4px;
-
       span {
         color: #ffffff;
       }
@@ -122,22 +125,12 @@ html.dark {
  .el-footer{
    background-color: var(--el-fill-color);
  }
-  .tabs,
+  .gvb-tabs,
   .copyright {
     background-color: var(--el-fill-color);
+    
   }
   /*  end-后台主页的暗色样式 */
-
-  // 面包屑的暗色样式
-  .bread span {
-    color: #ffffff;
-    cursor: pointer !important;
-  }
-
-  .el-breadcrumb_item:last-child .el-breadcrumb__inner {
-    color: #fc9105 !important;
-    font-weight: 800 !important;
-  }
 
   // 表格的暗色样式
   .el-table {
@@ -150,6 +143,5 @@ html.dark {
       background-color: var(--el-fill-color) !important;
     }
   }
-
 
 }

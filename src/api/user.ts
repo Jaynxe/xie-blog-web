@@ -1,6 +1,6 @@
 import service from "@/utils/request"
 import { useAuthStore } from "@/stores/auth"
-import type { EmailLogin, RegisterData, ResetPassword } from "@/types/define"
+import type {EmailLogin, ModifyUser, RegisterUser, ResetPassword} from "@/types"
 // 登录接口
 export function login(username: string | string[], password: string) {
     const requestData = { name: username, password }
@@ -81,7 +81,7 @@ export const generateRegisterCode = (email: string) => {
     return service.post(`register`, { email });
 };
 // 提交注册表单
-export const registerUser = (formData: RegisterData) => {
+export const registerUser = (formData: RegisterUser) => {
     return service.post('register', formData);
 };
 
@@ -92,8 +92,8 @@ export const getUserInfo = () => {
 }
 
 //用户列表
-export const getUserList = () => {
-    return service.get("authrequired/admin/getAllUsers")
+export const getUserList = (params:object) => {
+    return service.get("authrequired/admin/getAllUsersWithQuery", {params})
 }
 // 批量删除用户
 export const batchDeleteUser = (id_list:number[]) => {
@@ -104,6 +104,10 @@ export const batchDeleteUser = (id_list:number[]) => {
     })
 }
 // 管理员新增用户
-export const adminRegisterUser = (formData:RegisterData) => {
+export const adminRegisterUser = (formData:RegisterUser) => {
     return service.post('authrequired/admin/registerUser', formData);
 };
+// 管理员修改用户
+export const modifyUserInfo = (formData:ModifyUser) => {
+    return service.patch('authrequired/admin/modifyUser', formData);
+}

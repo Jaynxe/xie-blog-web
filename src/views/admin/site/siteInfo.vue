@@ -2,7 +2,8 @@
 import { ref, reactive, onMounted } from 'vue';
 import { ElMessage } from 'element-plus';
 import { getSiteInfo, updateSiteInfo } from '@/api';
-
+import {useAuthStore} from "@/stores/auth";
+const authStore = useAuthStore();
 const productionDependencies = [
   { package: "@element-plus/icons-vue", version: "2.3.1" },
   { package: "@vueuse/core", version: "10.9.0" },
@@ -144,7 +145,7 @@ onMounted(() => {
           <el-descriptions-item v-for="(label, key) in labels" label-class-name="site-label" :label="label" :key="key">
             <div class="info-content flex justify-between items-center">
               <span class="text-sm font-light text-gray-500 ">{{ siteInfo[key] }}</span>
-              <el-button type="primary" @click="modifyInfo(key)" bg text>修改</el-button>
+              <el-button type="primary" :disabled="authStore.getScope()!=='admin' " @click="modifyInfo(key)" bg text>修改</el-button>
             </div>
             <el-divider style="margin: 5px 0;" border-style="dashed" />
           </el-descriptions-item>

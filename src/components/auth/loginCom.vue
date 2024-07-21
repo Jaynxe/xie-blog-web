@@ -5,9 +5,9 @@ import { ElMessage } from "element-plus"
 import { useRouter } from "vue-router"
 import { ref, computed } from "vue"
 import {View, Hide, Warning} from "@element-plus/icons-vue"
-import theme from "@/components/theme.js"
+import theme from "@/components/theme"
 import { errorCode } from "@/utils/errcode"
-import type {PasswordLogin} from "@/types/define";
+import type {PasswordLogin} from "@/types";
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -78,7 +78,6 @@ async function refreshToken() {
   try {
     const res = await toRefreshToken(rtk);
     if (res.data.status === 0) {
-      const authStore = useAuthStore();
       // 刷新成功后更新 localStorage
       authStore.setData(res.data.data);
       // 再次设置刷新定时器
@@ -124,7 +123,7 @@ function setupTokenRefresh() {
 
 <template>
   <div class="login-page flex flex-col justify-center items-center h-screen">
-    <div class="login-container rounded-lg overflow-hidden w-1/3 bg-white shadow-lg">
+    <div class="login-container overflow-hidden w-1/3 bg-white rounded-3xl shadow-lg">
       <div class="login-main py-5 px-7">
         <div class="form-container p-4">
           <!-- 表单头部 -->

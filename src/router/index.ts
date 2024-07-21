@@ -12,6 +12,7 @@ const router = createRouter({
     {
       path: "/login",
       name: "login",
+      // component: () => import("@/views/login/index.vue"),
       redirect: "/login/pwd",
       beforeEnter:async (to,from) => {
           const loggedIn = await isUserLoggedIn();
@@ -31,25 +32,25 @@ const router = createRouter({
           path: "/login/pwd",
           name: "loginPwd",
           component: () => import("@/views/login/loginPwd.vue"),
-          meta: {title:"密码登录" } // 添加meta属性
+          meta: {title:"密码登录" }
         },
         {
           path: "/login/email",
           name: "loginEmail",
           component: () => import("@/views/login/loginEmail.vue"),
-          meta: {title:"邮箱登录" } // 添加meta属性
+          meta: {title:"邮箱登录" }
         },
         {
           path: "/login/forgetPassword",
           name: "forgetPassword",
           component: () => import("@/views/login/forgetPassword.vue"),
-          meta: {title:"重置密码" } // 添加meta属性
+          meta: {title:"重置密码" } 
         },
         {
           path: "/login/signup",
           name: "signup",
           component: () => import("@/views/login/register.vue"),
-          meta: {title:"用户注册" } // 添加meta属性
+          meta: {title:"用户注册" } 
         },
       ],
     },
@@ -58,19 +59,19 @@ const router = createRouter({
       path: "/:pathMatch(.*)*",
       name: "NotFound",
       component: () => import("@/views/exception/404.vue"),
-      meta: {title:"404" } // 添加meta属性
+      meta: {title:"404" } 
     },
     {
       path: "/exception/403",
       name: "Forbidden",
       component: () => import("@/views/exception/403.vue"),
-      meta: {title:"403" } // 添加meta属性
+      meta: {title:"403" } 
     },
     {
       path: "/exception/500",
       name: "ServerError",
       component: () => import("@/views/exception/500.vue"),
-      meta: {title:"500" } // 添加meta属性
+      meta: {title:"500" }
     },
     // 博客前端后台
     {
@@ -83,44 +84,53 @@ const router = createRouter({
           path: "/admin/home",
           name: "adminHome",
           component: () => import("@/views/admin/home/home.vue"),
-          meta: { requireAuth: true, title:"后台首页" } // 添加meta属性
+          meta: { requireAuth: true, title:"首页"}
         },
         {
-          path: "/admin/userManage",
-          name: "userManage",
-          component: () => import("@/views/admin/user/userManage.vue"),
-          meta: { requireAuth: true, role:"admin", title:"用户管理" } // 添加meta属性
+          path: "/admin/systemManage",
+          name: "systemManage",
+          meta: { requireAuth: true, role:"admin", title:"系统管理" },
+          redirect:"/admin/systemManage/userManage",
+          children:[
+            {
+              path: "/admin/systemManage/userManage",
+              name: "userManage",
+              component: () => import("@/views/admin/user/userManage.vue"),
+              meta: { requireAuth: true, role:"admin", title:"用户管理" } 
+            },
+            {
+              path: "/admin/systemManage/articleManage",
+              name: "articleManage",
+              component: () => import("@/views/admin/article/articleManage.vue"),
+              meta: { requireAuth: true, role:"admin", title:"文章管理"}
+            },
+          ]
         },
         {
           path: "/admin/userInfo",
           name: "userInfo",
           component: () => import("@/views/admin/user/userInfo.vue"),
-          meta: { requireAuth: true , title:"用户信息"} // 添加meta属性
+          meta: { requireAuth: true , title:"用户信息"} 
         },
         {
           path: "/admin/userCollection",
           name: "userCollection",
           component: () => import("@/views/admin/user/userCollection.vue"),
-          meta: { requireAuth: true, role:"admin" , title:"用户收藏"} // 添加meta属性
+          meta: { requireAuth: true, role:"admin" , title:"用户收藏"} 
         },
         {
           path: "/admin/userPost",
           name: "userPost",
           component: () => import("@/views/admin/user/userPost.vue"),
-          meta: { requireAuth: true, role:"admin" , title:"用户发布"} // 添加meta属性
+          meta: { requireAuth: true, role:"admin" , title:"用户发布"} 
         },
         {
-          path: "/admin/siteInfo",
-          name: "siteInfo",
+          path: "/admin/about",
+          name: "about",
           component: () => import("@/views/admin/site/siteInfo.vue"),
-          meta: { requireAuth: true, title:"关于" } // 添加meta属性
+          meta: { requireAuth: true, title:"关于" } 
         },
-        {
-          path: "/admin/articleManage",
-          name: "articleManage",
-          component: () => import("@/views/admin/article/articleManage.vue"),
-          meta: { requireAuth: true, role:"admin", title:"文章管理"} // 添加meta属性
-        },
+      
       ],
     },
 

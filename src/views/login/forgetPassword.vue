@@ -3,8 +3,9 @@ import { ref, computed, reactive } from "vue";
 import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 import { Lock, Promotion, Message } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
+import theme from "@/components/theme"
 import { generateResetPasswordCode, submitResetPasswordForm } from "@/api";
-import { type ResetPassword } from "@/types/define";
+import { type ResetPassword } from "@/types";
 import { errorCode } from "@/utils/errcode";
 
 const router = useRouter();
@@ -128,8 +129,8 @@ const goBack = () => {
 
 <template>
   <div class="reset-password-page h-screen flex flex-col justify-center items-center ">
-    <div class="reset-container w-full max-w-lg flex justify-center bg-white p-5 rounded-lg  ">
-      <div class="reset-main w-4/5 flex flex-col items-center p-y-5 px-0">
+    <div class="reset-container w-1/3 flex justify-center bg-white py-10 rounded-3xl">
+      <div class="reset-main w-5/6 flex flex-col items-center">
         <div class="form-container w-full">
           <div class="form-top flex justify-between items-center mb-5">
             <span class="title text-2xl text-sky-500 font-bold">重置密码</span>

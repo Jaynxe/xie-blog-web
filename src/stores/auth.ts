@@ -1,4 +1,4 @@
-import type { UserInfo } from "@/types/define";
+import type { UserInfo } from "@/types";
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
 
@@ -90,6 +90,7 @@ export const useAuthStore = defineStore("auth", () => {
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("expiredAt");
         localStorage.removeItem("rememberMe");
+        sessionStorage.removeItem("tabs");
     }
 
     return {

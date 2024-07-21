@@ -9,7 +9,7 @@ export default defineComponent({
     setup() {
         /* start——暗黑模式 */
         const isDark = useDark({
-            disableTransition: false,
+            disableTransition: true,
             valueDark: 'dark',
             valueLight: 'light',
         });

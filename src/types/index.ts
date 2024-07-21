@@ -3,6 +3,7 @@ export interface MenuItem {
   title: string;
   icon: string;
   name: string;
+  scope:string[];
   children?: MenuItem[];
 }
 
@@ -33,7 +34,7 @@ export interface PasswordLogin{
   email: string
   password: string
 }
-export interface RegisterData {
+export interface RegisterUser {
   name: string
   email: string
   verificationCode: string
@@ -67,8 +68,19 @@ export interface User {
 }
 // 用户管理搜索表单
 export interface SearchForm {
-  username: string;
-  phone: string;
+  name: string;
+  email: string;
+  role:string;
 }
-export interface WeatherMap{
+export interface PaginationForm {
+  page:number;
+  limit:number;
+}
+export interface ModifyUser{
+  id: number;
+  name: string;
+  email: string;
+  nick_name: string;
+  sex: string;
+  avatar: string;
 }

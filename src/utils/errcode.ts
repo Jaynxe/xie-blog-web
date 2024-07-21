@@ -1,4 +1,4 @@
-import { type ErrorCodeType } from '@/types/define';
+import { type ErrorCodeType } from '@/types';
 
 export const errorCode: ErrorCodeType = {
   0: "没有发生错误",

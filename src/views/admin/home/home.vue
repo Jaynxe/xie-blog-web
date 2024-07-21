@@ -4,9 +4,13 @@ import * as echarts from 'echarts/core';
 import { LineChart, BarChart } from 'echarts/charts';
 import { GridComponent, TooltipComponent, TitleComponent } from 'echarts/components';
 import { CanvasRenderer } from 'echarts/renderers';
-import { type WeatherData } from '@/types/define'
+import { type WeatherData } from '@/types'
 import { useAuthStore } from '@/stores/auth';
 import axios from 'axios';
+import { ElConfigProvider } from 'element-plus';
+// 引入中文包
+import zhCn from 'element-plus/es/locale/lang/zh-cn';
+
 // 引入图表组件
 echarts.use([LineChart, BarChart, GridComponent, TooltipComponent, CanvasRenderer, TitleComponent]);
 
@@ -175,7 +179,7 @@ const flowCharts = () => {
         top: "5%",
         left: 0,
         right: 0,
-        bottom: '30%',
+        bottom: '25%',
         containLabel: true,
       },
       xAxis: {
@@ -334,7 +338,8 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="welcome mb-1 bg-white rounded">
+<div class="home">
+  <div class="welcome mb-2 bg-white rounded">
     <el-card class="relative h-64 flex flex-col justify-center items-center bg-welcome-bg bg-center bg-contain bg-no-repeat" shadow="hover">
       <div class="card-content absolute left-2.5 top-2.5 p-2.5 rounded">
         <p class="text-xl font-semibold">{{ greet }}</p>
@@ -349,7 +354,7 @@ onUnmounted(() => {
     </el-card>
   </div>
 
-  <div class="data-preview flex flex-wrap gap-1 mb-1 w-full">
+  <div class="data-preview flex flex-wrap gap-1 mb-2 w-full">
     <el-card v-for="(card, index) in cards" :key="index" shadow="hover" class="flex-1 max-w-1/4 min-w-50 box-border p-0">
       <div class="card-header flex items-center justify-between w-full">
         <p class="font-bold">{{ card.label }}</p>
@@ -372,17 +377,18 @@ onUnmounted(() => {
     </el-card>
   </div>
 
-  <div class="data-visual flex w-full h-160 gap-1 ">
-    <div class="visual-left w-1/2 flex flex-col gap-1">
-      <el-card class="flow w-full h-80" shadow="hover">
+  <div class="data-visual flex w-full gap-1 ">
+    <div class="visual-left w-1/2 h-full flex flex-col gap-2">
+      <el-card class="flow w-full h-64" shadow="hover">
         <template #header>网站流量</template>
-        <div ref="flowChart" class="chart h-80 text-black"></div>
+        <div ref="flowChart" class="chart h-56 text-black"></div>
       </el-card>
-      <el-card class="register-distribution flex-1 h-56 w-full" shadow="hover">
+      <el-card class="register-distribution flex-1 h-60 w-full" shadow="hover">
         <template #header>注册人员分布前六地区</template>
-        <div ref="distributionChart" class="chart h-56 text-black"></div>
+        <div ref="distributionChart" class="chart h-52 text-black"></div>
       </el-card>
     </div>
+    <el-config-provider :locale="zhCn">
     <el-calendar v-model="date" ref="calendar" class="calendar-date w-1/2 h-full border border-gray-200 rounded">
       <template #date-cell="{ data }">
         <p :class="data.isSelected ? 'is-selected' : ''">
@@ -392,7 +398,9 @@ onUnmounted(() => {
         </p>
       </template>
     </el-calendar>
+    </el-config-provider>
   </div>
+</div>
 </template>
 
 <style scoped>

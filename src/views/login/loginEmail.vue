@@ -4,7 +4,8 @@ import { ElMessage, type FormInstance, type FormRules } from "element-plus";
 import { Promotion, Message } from "@element-plus/icons-vue";
 import { useRouter } from "vue-router";
 import { generateEmailLoginCode, submitEmailLoginForm } from "@/api";
-import { type EmailLogin } from "@/types/define";
+import { type EmailLogin } from "@/types";
+import theme from "@/components/theme"
 import { useAuthStore } from "@/stores/auth"
 import { errorCode } from "@/utils/errcode";
 
@@ -113,8 +114,8 @@ const goBack = () => {
 
 <template>
   <div class="email-login-page h-screen flex flex-col justify-center items-center">
-    <div class="login-container w-1/3  max-w-lg flex justify-center bg-white p-5 rounded-lg">
-      <div class="login-main w-5/6 flex flex-col items-center py-5 px-0">
+    <div class="login-container w-1/3 flex justify-center bg-white py-10 rounded-3xl">
+      <div class="login-main w-5/6 flex flex-col items-center ">
         <div class="form-container w-full">
 
           <div class="form-top flex justify-between items-center mb-5">
