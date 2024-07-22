@@ -1,5 +1,5 @@
 // stores/collapse.ts
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 
 export const useCollapseStore = defineStore('collapse', {
     state: () => ({

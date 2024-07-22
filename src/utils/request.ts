@@ -2,10 +2,10 @@ import axios from "axios";
 import {useAuthStore} from "@/stores/auth";
 
 const service = axios.create({
-  baseURL: "http://127.0.0.1:8888/api/",
-  timeout: 10000,
-  headers: { "Content-Type": "application/json" },
-  withCredentials: true, // 允许携带cookie
+    baseURL: "http://127.0.0.1:8888/api/",
+    timeout: 10000,
+    headers: {"Content-Type": "application/json"},
+    withCredentials: true, // 允许携带cookie
 });
 
 // 响应拦截器处理错误的函数
@@ -79,10 +79,10 @@ const service = axios.create({
 // }
 
 // 白名单放置一些不需要token的接口
-const whiteList = ['login','register','resetPassword','refresh','loginWithEmail'];
+const whiteList = ['login', 'register', 'resetPassword', 'refresh', 'loginWithEmail'];
 
 // 请求拦截器
-service.interceptors.request.use( async (config) => {
+service.interceptors.request.use(async (config) => {
         const authStore = useAuthStore();
         const token = authStore.token;
         // 检查是否在白名单中
@@ -102,9 +102,9 @@ service.interceptors.request.use( async (config) => {
 
 // 响应拦截器
 service.interceptors.response.use((response) => {
-      // 响应数据，不做处理
+        // 响应数据，不做处理
         return response;
-    },async (error) => {
+    }, async (error) => {
         return Promise.reject(error)
     }
 );

@@ -1,6 +1,6 @@
-import type { UserInfo } from "@/types";
-import { defineStore } from "pinia";
-import { ref, reactive } from "vue";
+import type {UserInfo} from "@/types";
+import {defineStore} from "pinia";
+import {ref, reactive} from "vue";
 
 export const useAuthStore = defineStore("auth", () => {
     // 定义状态变量
@@ -22,7 +22,7 @@ export const useAuthStore = defineStore("auth", () => {
 
     // 设置数据并同步到localStorage
     function setData(data: { token: string; scope: string; refresh_token: string; expired_at: number; }) {
-        const { token: newToken, scope: newScope, refresh_token: newRefreshToken, expired_at: newExpiredAt } = data;
+        const {token: newToken, scope: newScope, refresh_token: newRefreshToken, expired_at: newExpiredAt} = data;
         token.value = newToken;
         scope.value = newScope;
         refreshToken.value = newRefreshToken;

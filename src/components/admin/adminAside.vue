@@ -68,6 +68,7 @@ const filteredMenuList = computed(() => {
       );
     });
   }
+
   return filterMenu(menuList);
 });
 
@@ -127,7 +128,7 @@ watch(route, (newRoute) => {
 
     <!-- 切换侧边栏缩放 -->
     <div
-      class="absolute right-1 bottom-20 w-full flex items-center transition-all duration-600 ease"
+      class="absolute right-1 bottom-10 w-full flex items-center transition-all duration-600 ease"
       :style="{
         justifyContent: collapseStore.isCollapse ? 'center' : 'flex-end',
       }"
@@ -141,7 +142,7 @@ watch(route, (newRoute) => {
           class="toggle-button cursor-pointer"
           @click="collapseStore.toggleCollapse"
         >
-          <el-icon size="20px">
+          <el-icon size="22px">
             <Fold />
           </el-icon>
         </div>
@@ -151,7 +152,7 @@ watch(route, (newRoute) => {
           class="toggle-button cursor-pointer"
           @click="collapseStore.toggleCollapse"
         >
-          <el-icon size="20px">
+          <el-icon size="22px">
             <Expand />
           </el-icon>
         </div>
@@ -164,6 +165,7 @@ watch(route, (newRoute) => {
 .aside-main {
   height: calc(100vh - 60px);
 }
+
 .aside-menu {
   border-right: 0;
 }

@@ -50,5 +50,5 @@ onMounted(() => {
 </template>
 
 <style lang="scss" scoped>
-  /* 确保图表在父容器中正确展示 */
+/* 确保图表在父容器中正确展示 */
 </style>
