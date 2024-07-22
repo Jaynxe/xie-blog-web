@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 4559371 */
-  src: url('iconfont.woff2?t=1718851474701') format('woff2'),
-       url('iconfont.woff?t=1718851474701') format('woff'),
-       url('iconfont.ttf?t=1718851474701') format('truetype');
+  src: url('//at.alicdn.com/t/c/font_4559371_bxgboj45x4f.woff2?t=1721617695940') format('woff2'),
+       url('//at.alicdn.com/t/c/font_4559371_bxgboj45x4f.woff?t=1721617695940') format('woff'),
+       url('//at.alicdn.com/t/c/font_4559371_bxgboj45x4f.ttf?t=1721617695940') format('truetype');
 }
 
 .iconfont {
@@ -13,28 +13,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-huidaodingbu:before {
-  content: "\e600";
+.icon-qq:before {
+  content: "\e611";
 }
 
-.icon-logo-qq:before {
-  content: "\e63c";
-}
-
-.icon-youxiang1:before {
-  content: "\e626";
-}
-
-.icon-QQ:before {
-  content: "\e667";
+.icon-youxiang:before {
+  content: "\e664";
 }
 
 .icon-github:before {
-  content: "\e66f";
+  content: "\e799";
 }
 
-.icon-gitee:before {
-  content: "\e603";
+.icon-huidaodingbu:before {
+  content: "\e600";
 }
 
 .icon-denglu:before {
@@ -72,4 +64,3 @@
 .icon-wenzhang:before {
   content: "\e668";
 }
-

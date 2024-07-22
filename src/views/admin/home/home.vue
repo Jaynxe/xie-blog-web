@@ -1,13 +1,13 @@
 <script setup lang='ts'>
-import { reactive, onMounted } from 'vue';
+import {reactive, onMounted} from 'vue';
 import * as echarts from 'echarts/core';
-import { LineChart, BarChart } from 'echarts/charts';
-import { GridComponent, TooltipComponent, TitleComponent } from 'echarts/components';
-import { CanvasRenderer } from 'echarts/renderers';
-import { type WeatherData } from '@/types'
-import { useAuthStore } from '@/stores/auth';
+import {LineChart, BarChart} from 'echarts/charts';
+import {GridComponent, TooltipComponent, TitleComponent} from 'echarts/components';
+import {CanvasRenderer} from 'echarts/renderers';
+import {type WeatherData} from '@/types'
+import {useAuthStore} from '@/stores/auth';
 import axios from 'axios';
-import { ElConfigProvider } from 'element-plus';
+import {ElConfigProvider} from 'element-plus';
 // 引入中文包
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 
@@ -29,7 +29,7 @@ let loading = ref(true); // 用于加载天气
 async function getWeather() {
   let req = await axios.get("https://restapi.amap.com/v3/weather/weatherInfo?city=440100&key=9e887ea2d26d9b862ae41c91d911e00f&extensions=base&output=JSON"
   )
-  const { city, reporttime, temperature, weather } = req.data.lives[0];
+  const {city, reporttime, temperature, weather} = req.data.lives[0];
 
   const wd: WeatherData = {
     city,
@@ -40,6 +40,7 @@ async function getWeather() {
   Object.assign(weatherData, wd)
   loading.value = false; // 加载完成
 }
+
 // 展示的天气图标
 const weatherIcon = computed(() => {
   const weather = weatherData.weather as keyof typeof weatherMap;
@@ -53,7 +54,7 @@ const weatherIcon = computed(() => {
     '中雨': 'Pouring',
     '雪': 'Drizzling',
     '雷阵雨': 'Lightning',
-    '中雨-大雨':'Pouring'
+    '中雨-大雨': 'Pouring'
   };
   return weatherMap[weather] || 'Sunny';
 });
@@ -61,10 +62,38 @@ const weatherIcon = computed(() => {
 /* 小卡片展示部分 */
 // 小卡片展示数据
 const cards = reactive([
-  { icon: 'icon-yonghuzongshu', label: '用户总数', value: 36000, percentage: '+88%', trendIcon: "TopRight", chartData: [10, 52, 200, 334, 390, 430, 520] },
-  { icon: 'icon-wenzhang', label: '文章总数', value: 5670, percentage: '+12%', trendIcon: "TopRight", chartData: [5, 10, 16, 18, 24, 27, 30] },
-  { icon: 'icon-tubiaozhizuomoban-', label: '近七天登录', value: 1260, percentage: '+5%', trendIcon: "TopRight", chartData: [12, 32, 21, 54, 33, 26, 44] },
-  { icon: 'icon-xinzengyonghu', label: '近七天注册', value: 570, percentage: '-2%', trendIcon: "BottomRight", chartData: [8, 15, 17, 25, 20, 18, 24] },
+  {
+    icon: 'icon-yonghuzongshu',
+    label: '用户总数',
+    value: 36000,
+    percentage: '+88%',
+    trendIcon: "TopRight",
+    chartData: [10, 52, 200, 334, 390, 430, 520]
+  },
+  {
+    icon: 'icon-wenzhang',
+    label: '文章总数',
+    value: 5670,
+    percentage: '+12%',
+    trendIcon: "TopRight",
+    chartData: [5, 10, 16, 18, 24, 27, 30]
+  },
+  {
+    icon: 'icon-tubiaozhizuomoban-',
+    label: '近七天登录',
+    value: 1260,
+    percentage: '+5%',
+    trendIcon: "TopRight",
+    chartData: [12, 32, 21, 54, 33, 26, 44]
+  },
+  {
+    icon: 'icon-xinzengyonghu',
+    label: '近七天注册',
+    value: 570,
+    percentage: '-2%',
+    trendIcon: "BottomRight",
+    chartData: [8, 15, 17, 25, 20, 18, 24]
+  },
 ]);
 
 /* 用于存放小图echarts实例 */
@@ -90,16 +119,16 @@ const renderChart = (chartEl: HTMLElement | null | undefined, data: number[]) =>
       lineStyle: {
         width: 2,
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: 'rgba(0, 170, 255, 1)' },
-          { offset: 0.5, color: 'rgba(0, 170, 255, 0.5)' },
-          { offset: 1, color: 'rgba(0, 170, 255, 0)' }
+          {offset: 0, color: 'rgba(0, 170, 255, 1)'},
+          {offset: 0.5, color: 'rgba(0, 170, 255, 0.5)'},
+          {offset: 1, color: 'rgba(0, 170, 255, 0)'}
         ]),
         shadowColor: 'rgba(0, 0, 0, 0.5)',
       },
       areaStyle: {
         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-          { offset: 0, color: 'rgba(0, 170, 255, 0.5)' },
-          { offset: 1, color: 'rgba(0, 170, 255, 0)' }
+          {offset: 0, color: 'rgba(0, 170, 255, 0.5)'},
+          {offset: 1, color: 'rgba(0, 170, 255, 0)'}
         ]),
       },
     }],
@@ -242,8 +271,8 @@ const flowCharts = () => {
           },
           areaStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: 'rgba(0, 170, 255, 0.3)' },
-              { offset: 1, color: 'rgba(0, 170, 255, 0)' }
+              {offset: 0, color: 'rgba(0, 170, 255, 0.3)'},
+              {offset: 1, color: 'rgba(0, 170, 255, 0)'}
             ]),
           },
           itemStyle: {
@@ -306,8 +335,8 @@ const registerCharts = () => {
           type: 'bar',
           itemStyle: {
             color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: '#00aaff' },
-              { offset: 1, color: 'rgba(0, 170, 255, 0.1)' },
+              {offset: 0, color: '#00aaff'},
+              {offset: 1, color: 'rgba(0, 170, 255, 0.1)'},
             ]),
           },
           barWidth: '40%',
@@ -338,69 +367,76 @@ onUnmounted(() => {
 </script>
 
 <template>
-<div class="home">
-  <div class="welcome mb-2 bg-white rounded">
-    <el-card class="relative h-64 flex flex-col justify-center items-center bg-welcome-bg bg-center bg-contain bg-no-repeat" shadow="hover">
-      <div class="card-content absolute left-2.5 top-2.5 p-2.5 rounded">
-        <p class="text-xl font-semibold">{{ greet }}</p>
-        <div v-if="!loading" class="weather-info flex items-center mt-2.5 text-base">
-          {{ weatherData.city }} - {{ weatherData.reporttime }} - {{ weatherData.temperature }}°C - {{
-            weatherData.weather }}
-          <el-icon class="ml-1 text-xl">
-            <component :is="weatherIcon" />
-          </el-icon>
-        </div>
-      </div>
-    </el-card>
-  </div>
-
-  <div class="data-preview flex flex-wrap gap-1 mb-2 w-full">
-    <el-card v-for="(card, index) in cards" :key="index" shadow="hover" class="flex-1 max-w-1/4 min-w-50 box-border p-0">
-      <div class="card-header flex items-center justify-between w-full">
-        <p class="font-bold">{{ card.label }}</p>
-        <i :class="['iconfont', card.icon, 'mr-1 text-2xl text-sky-500 font-medium']"></i>
-      </div>
-      <div class="card-body flex justify-between items-center w-full">
-        <div class="left-section flex-1">
-          <p class="value text-lg font-light my-2.5"><el-statistic :value="card.value" /></p>
-          <span class="flex items-center percentage font-bold" :class="{ 'text-green-500': card.percentage.includes('+'), 'text-red-500': card.percentage.includes('-') }">
-            {{ card.percentage }}
-            <el-icon class="inline ml-1.5">
-              <component :is="card.trendIcon" />
+  <div class="home">
+    <div class="welcome mb-2 bg-white rounded">
+      <el-card
+          class="relative h-64 flex flex-col justify-center items-center bg-welcome-bg bg-center bg-contain bg-no-repeat"
+          shadow="hover">
+        <div class="card-content absolute left-2.5 top-2.5 p-2.5 rounded">
+          <p class="text-xl font-semibold">{{ greet }}</p>
+          <div v-if="!loading" class="weather-info flex items-center mt-2.5 text-base">
+            {{ weatherData.city }} - {{ weatherData.reporttime }} - {{ weatherData.temperature }}°C - {{
+              weatherData.weather
+            }}
+            <el-icon class="ml-1 text-xl">
+              <component :is="weatherIcon"/>
             </el-icon>
-          </span>
+          </div>
         </div>
-        <div class="right-section flex-1 flex justify-end items-center">
-          <div :id="`chart-${index}`" class="mini-chart w-full h-12 mt-2.5"></div>
-        </div>
-      </div>
-    </el-card>
-  </div>
-
-  <div class="data-visual flex w-full gap-1 ">
-    <div class="visual-left w-1/2 h-full flex flex-col gap-2">
-      <el-card class="flow w-full h-64" shadow="hover">
-        <template #header>网站流量</template>
-        <div ref="flowChart" class="chart h-56 text-black"></div>
-      </el-card>
-      <el-card class="register-distribution flex-1 h-60 w-full" shadow="hover">
-        <template #header>注册人员分布前六地区</template>
-        <div ref="distributionChart" class="chart h-52 text-black"></div>
       </el-card>
     </div>
-    <el-config-provider :locale="zhCn">
-    <el-calendar v-model="date" ref="calendar" class="calendar-date w-1/2 h-full border border-gray-200 rounded">
-      <template #date-cell="{ data }">
-        <p :class="data.isSelected ? 'is-selected' : ''">
-          {{ data.day.split('-').slice(1).join('-') }}
-          {{ data.isSelected ? '✔️' : '' }}
-          {{ data.day.split('-').slice(1).join('-') === "10-27" ? '🎂' : '' }}
-        </p>
-      </template>
-    </el-calendar>
-    </el-config-provider>
+
+    <div class="data-preview flex flex-wrap gap-1 mb-2 w-full">
+      <el-card v-for="(card, index) in cards" :key="index" shadow="hover"
+               class="flex-1 max-w-1/4 min-w-50 box-border p-0">
+        <div class="card-header flex items-center justify-between w-full">
+          <p class="font-bold">{{ card.label }}</p>
+          <i :class="['iconfont', card.icon, 'mr-1 text-2xl text-sky-500 font-medium']"></i>
+        </div>
+        <div class="card-body flex justify-between items-center w-full">
+          <div class="left-section flex-1">
+            <p class="value text-lg font-light my-2.5">
+              <el-statistic :value="card.value"/>
+            </p>
+            <span class="flex items-center percentage font-bold"
+                  :class="{ 'text-green-500': card.percentage.includes('+'), 'text-red-500': card.percentage.includes('-') }">
+            {{ card.percentage }}
+            <el-icon class="inline ml-1.5">
+              <component :is="card.trendIcon"/>
+            </el-icon>
+          </span>
+          </div>
+          <div class="right-section flex-1 flex justify-end items-center">
+            <div :id="`chart-${index}`" class="mini-chart w-full h-12 mt-2.5"></div>
+          </div>
+        </div>
+      </el-card>
+    </div>
+
+    <div class="data-visual flex w-full gap-1 ">
+      <div class="visual-left w-1/2 h-full flex flex-col gap-2">
+        <el-card class="flow w-full h-64" shadow="hover">
+          <template #header>网站流量</template>
+          <div ref="flowChart" class="chart h-56 text-black"></div>
+        </el-card>
+        <el-card class="register-distribution flex-1 h-60 w-full" shadow="hover">
+          <template #header>注册人员分布前六地区</template>
+          <div ref="distributionChart" class="chart h-52 text-black"></div>
+        </el-card>
+      </div>
+      <el-config-provider :locale="zhCn">
+        <el-calendar v-model="date" ref="calendar" class="calendar-date w-1/2 h-full border border-gray-200 rounded">
+          <template #date-cell="{ data }">
+            <p :class="data.isSelected ? 'is-selected' : ''">
+              {{ data.day.split('-').slice(1).join('-') }}
+              {{ data.isSelected ? '✔️' : '' }}
+              {{ data.day.split('-').slice(1).join('-') === "10-27" ? '🎂' : '' }}
+            </p>
+          </template>
+        </el-calendar>
+      </el-config-provider>
+    </div>
   </div>
-</div>
 </template>
 
 <style scoped>

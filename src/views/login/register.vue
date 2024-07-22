@@ -1,12 +1,12 @@
 <script lang="ts" setup>
-import { ref, computed, reactive } from "vue";
-import { ElMessage, type FormInstance, type FormRules } from "element-plus";
+import {ref, computed, reactive} from "vue";
+import {ElMessage, type FormInstance, type FormRules} from "element-plus";
 import {Lock, Promotion, Message, User} from "@element-plus/icons-vue";
-import { useRouter } from "vue-router";
-import { generateRegisterCode, registerUser } from "@/api";
+import {useRouter} from "vue-router";
+import {generateRegisterCode, registerUser} from "@/api";
 import {type RegisterUser} from "@/types";
 import theme from "@/components/theme"
-import { errorCode } from "@/utils/errcode";
+import {errorCode} from "@/utils/errcode";
 
 const router = useRouter();
 const registerForm = reactive<RegisterUser>({
@@ -17,27 +17,27 @@ const registerForm = reactive<RegisterUser>({
   confirm_password: "",
   nick_name: "",
   sex: "",
-  role:"",
+  role: "",
 });
 const formRef = ref<FormInstance>();// 注册表单的实例
 // 注册表单规则
 const rules = reactive<FormRules<RegisterUser>>({
   name: [
-    { required: true, message: "请输入姓名", trigger: "blur" },
+    {required: true, message: "请输入姓名", trigger: "blur"},
   ],
   nick_name: [
-    { required: true, message: "请输入昵称", trigger: "blur" },
+    {required: true, message: "请输入昵称", trigger: "blur"},
   ],
   email: [
-    { required: true, message: "请输入邮箱", trigger: "blur" },
-    { type: "email", message: "请输入有效的邮箱地址", trigger: "blur" },
+    {required: true, message: "请输入邮箱", trigger: "blur"},
+    {type: "email", message: "请输入有效的邮箱地址", trigger: "blur"},
   ],
   verificationCode: [
-    { required: true, message: "请输入验证码", trigger: "blur" },
+    {required: true, message: "请输入验证码", trigger: "blur"},
   ],
-  password: [{ required: true, message: "请输入新密码", trigger: "blur" }],
+  password: [{required: true, message: "请输入新密码", trigger: "blur"}],
   confirm_password: [
-    { required: true, message: "请确认新密码", trigger: "blur" },
+    {required: true, message: "请确认新密码", trigger: "blur"},
     {
       validator: (rule, value, callback) => {
         if (value !== registerForm.password) {
@@ -53,7 +53,7 @@ const rules = reactive<FormRules<RegisterUser>>({
 
 // 提交按钮是否解除禁用
 const canSubmit = computed(() => {
-  const { email, verificationCode, password, confirm_password } =
+  const {email, verificationCode, password, confirm_password} =
       registerForm;
   return Boolean(email && verificationCode && password && confirm_password);
 });
@@ -83,9 +83,9 @@ const showMessage = (message: string, type: 'success' | 'warning' | 'info' | 'er
 // 处理错误逻辑
 const handleError = (error: any) => {
   if (error.response && error.response.data && error.response.data.status) {
-    if (error.response.data.status === 1){
+    if (error.response.data.status === 1) {
       showMessage(error.response.data.reason, "error");
-    }else{
+    } else {
       showMessage(errorCode[error.response.data.status] || "未知错误", "error");
     }
   } else {
@@ -102,7 +102,7 @@ const getVerifyCode = async () => {
       showMessage("验证码获取成功", "success");
       startCountdown();
     }
-  } catch (error:any) {
+  } catch (error: any) {
     handleError(error)
   }
 };
@@ -133,7 +133,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 
 const goBack = () => {
-  router.push({ path: "/login" });
+  router.push({path: "/login"});
 };
 </script>
 
@@ -144,42 +144,42 @@ const goBack = () => {
         <div class="form-container w-full">
 
           <div class="form-top flex justify-between items-center mb-5 ">
-            <span class="title text-2xl font-bold text-sky-500">用户注册</span>
-            <theme />
+            <span class="title text-2xl font-bold text-blue-400">用户注册</span>
+            <theme/>
           </div>
-          <el-divider />
+          <el-divider/>
 
-          <el-form class="form-main w-full" :model="registerForm" :rules="rules" ref="formRef" label-width="1px" >
+          <el-form class="form-main w-full" :model="registerForm" :rules="rules" ref="formRef" label-width="1px">
             <el-form-item prop="sex">
               <el-radio-group v-model="registerForm.sex" size="large">
-                <el-radio-button :value="'男'" label="男" />
-                <el-radio-button :value="'女'" label="女" />
+                <el-radio-button :value="'男'" label="男"/>
+                <el-radio-button :value="'女'" label="女"/>
               </el-radio-group>
             </el-form-item>
             <el-form-item prop="name">
-              <el-input v-model="registerForm.name" placeholder="姓名" size="large">
+              <el-input v-model="registerForm.name" placeholder="姓名" size="large" clearable>
                 <template #prefix>
                   <el-icon>
-                    <User />
+                    <User/>
                   </el-icon>
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item prop="nick_name">
-              <el-input v-model="registerForm.nick_name" placeholder="昵称" size="large">
+              <el-input v-model="registerForm.nick_name" placeholder="昵称" size="large" clearable>
                 <template #prefix>
                   <el-icon>
-                    <User />
+                    <User/>
                   </el-icon>
                 </template>
               </el-input>
             </el-form-item>
 
             <el-form-item prop="email">
-              <el-input v-model="registerForm.email" placeholder="邮箱" size="large">
+              <el-input v-model="registerForm.email" placeholder="邮箱" size="large" clearable>
                 <template #prefix>
                   <el-icon>
-                    <Promotion />
+                    <Promotion/>
                   </el-icon>
                 </template>
               </el-input>
@@ -187,46 +187,50 @@ const goBack = () => {
             <el-form-item prop="verificationCode">
               <el-row :gutter="5" class="w-full">
                 <el-col :span="isButtonDisabled ? 14 : 16" class="flex items-center">
-                  <el-input  v-model="registerForm.verificationCode" placeholder="验证码" size="large">
+                  <el-input v-model="registerForm.verificationCode" placeholder="验证码" size="large" clearable>
                     <template #prefix>
                       <el-icon>
-                        <Message />
+                        <Message/>
                       </el-icon>
                     </template>
                   </el-input>
                 </el-col>
                 <el-col :span="isButtonDisabled ? 10 : 8" class="flex items-center">
-                  <el-button class="w-full" type="primary" :disabled="isButtonDisabled" @click="getVerifyCode" size="large">
+                  <el-button class="w-full" type="primary" :disabled="isButtonDisabled" @click="getVerifyCode"
+                             size="large">
                     {{
                       isButtonDisabled
-                        ? `${countdown}秒后重新获取`
-                        : "获取验证码"
+                          ? `${countdown}秒后重新获取`
+                          : "获取验证码"
                     }}
                   </el-button>
                 </el-col>
               </el-row>
             </el-form-item>
             <el-form-item prop="password">
-              <el-input v-model="registerForm.password" type="password" placeholder="密码" show-password size="large">
+              <el-input v-model="registerForm.password" type="password" placeholder="密码" show-password size="large"
+                        clearable>
                 <template #prefix>
                   <el-icon>
-                    <Lock />
+                    <Lock/>
                   </el-icon>
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item prop="confirmPassword">
               <el-input v-model="registerForm.confirm_password" type="password" placeholder="确认密码" show-password
-                size="large">
+                        size="large" clearable>
                 <template #prefix>
                   <el-icon>
-                    <Lock />
+                    <Lock/>
                   </el-icon>
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item>
-              <el-button class="w-full" type="primary" :disabled="!canSubmit" @click="submitForm(formRef)" size="large">确定</el-button>
+              <el-button class="login-button w-full" type="primary" :disabled="!canSubmit" @click="submitForm(formRef)"
+                         size="large">确定
+              </el-button>
             </el-form-item>
             <el-form-item>
               <el-button class="w-full" @click="goBack" size="large">返回</el-button>
@@ -240,12 +244,12 @@ const goBack = () => {
 </template>
 
 <style lang="scss" scoped>
-  .register-page {
-    background: var(--login-bg-gradient);
-  }
+.register-page {
+  background: var(--login-bg-gradient);
+}
 
-  .register-container {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-  }
+.register-container {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
 
 </style>

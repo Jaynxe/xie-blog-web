@@ -1,25 +1,25 @@
 <template>
   <div
-    class="gvb-tabs h-12 w-full border-b border-l border-solid border-b-gray-500/20 border-l-gray-500/20"
+      class="gvb-tabs h-12 w-full border-b border-l border-solid border-b-gray-500/20 border-l-gray-500/20"
   >
     <div class="tabs-container flex items-center justify-between">
       <div class="tabs-header">
         <el-tabs
-          v-model="activeValue"
-          type="card"
-          @tab-remove="removeTab"
-          @tab-click="changeTab"
+            v-model="activeValue"
+            type="card"
+            @tab-remove="removeTab"
+            @tab-click="changeTab"
         >
           <el-tab-pane
-            v-for="item in tabs"
-            :key="item.name"
-            :label="item.title"
-            :name="item.name"
-            :closable="!item.fixed"
+              v-for="item in tabs"
+              :key="item.name"
+              :label="item.title"
+              :name="item.name"
+              :closable="!item.fixed"
           >
             <template #label>
               <span
-                :class="
+                  :class="
                   activeValue === item.name
                     ? 'text-active'
                     : 'text-normal'
@@ -32,21 +32,22 @@
         </el-tabs>
       </div>
       <el-button
-        @click="removeAllTabs"
-        type="text"
-        class="mb-2 mr-2"
-        :icon="Delete"
-        >全部删除</el-button
+          @click="removeAllTabs"
+          type="text"
+          class="mb-2 mr-2"
+          :icon="Delete"
+      >全部删除
+      </el-button
       >
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import type { TabPaneName } from "element-plus";
-import { Delete } from "@element-plus/icons-vue";
+import {ref, watch, onMounted} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import type {TabPaneName} from "element-plus";
+import {Delete} from "@element-plus/icons-vue";
 
 interface TabType {
   name: string;
@@ -58,7 +59,7 @@ const route = useRoute();
 const router = useRouter();
 
 const defaultTabs: TabType[] = [
-  { name: "adminHome", title: "首页", fixed: true },
+  {name: "adminHome", title: "首页", fixed: true},
 ];
 
 const tabs = ref<TabType[]>([]);
@@ -77,7 +78,7 @@ watch(route, (newRoute) => {
 
 // 点击标签页后进行路由跳转
 const changeTab = (tab: { paneName: any }) => {
-  router.push({ name: tab.paneName });
+  router.push({name: tab.paneName});
 };
 
 // 删除标签页
@@ -91,7 +92,7 @@ const removeTab = (targetName: TabPaneName) => {
       const newIndex = index === tabs.value.length ? index - 1 : index;
       if (newIndex >= 0) {
         activeValue.value = tabs.value[newIndex].name;
-        router.push({ name: tabs.value[newIndex].name });
+        router.push({name: tabs.value[newIndex].name});
       }
     }
     saveTabsToSessionStorage();
@@ -102,7 +103,7 @@ const removeTab = (targetName: TabPaneName) => {
 const removeAllTabs = () => {
   tabs.value = tabs.value.filter((tab) => tab.fixed);
   activeValue.value = tabs.value[0].name;
-  router.push({ name: tabs.value[0].name });
+  router.push({name: tabs.value[0].name});
   saveTabsToSessionStorage();
 };
 
@@ -124,7 +125,7 @@ const loadTabsFromSessionStorage = () => {
 // 添加标签页
 const addTab = (name: string, title: string) => {
   if (!tabs.value.find((tab) => tab.name === name)) {
-    tabs.value.push({ name, title });
+    tabs.value.push({name, title});
   }
 };
 
@@ -148,18 +149,23 @@ onMounted(() => {
     white-space: nowrap;
     max-width: calc(100% - 100px); // Adjust based on your layout
   }
+
   ::v-deep(.el-tabs--card > .el-tabs__header) {
     border: none;
   }
+
   ::v-deep(.el-tabs__nav-scroll) {
     padding: 4px 4px;
   }
+
   ::v-deep(.el-tabs__nav) {
     border: 0;
   }
+
   ::v-deep(.el-tabs__header) {
     border-bottom: 0;
   }
+
   ::v-deep(.el-tabs__item) {
     box-sizing: border-box;
     border: 1px solid var(--el-border-color-darker);
@@ -169,18 +175,22 @@ onMounted(() => {
     margin-top: 2px;
     transition: padding 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
     height: 34px;
+
     &.is-active {
       border: 1px solid var(--el-color-primary);
     }
   }
+
   ::v-deep(.el-tabs__item):first-child {
     border: 1px solid var(--el-border-color-darker);
+
     &.is-active {
       border: 1px solid var(--el-color-primary);
     }
   }
 }
-.text-normal{
+
+.text-normal {
   color: var(--tab-text-color);
 }
 </style>

@@ -1,15 +1,15 @@
-import { defineComponent } from 'vue';
-import { useDark, useToggle } from '@vueuse/core';
-import { Moon, Sunny } from '@element-plus/icons-vue';
+import {defineComponent} from 'vue';
+import {useDark, useToggle} from '@vueuse/core';
+import {Moon, Sunny} from '@element-plus/icons-vue';
 import 'element-plus/es/components/switch/style/css';
-import { ElSwitch } from 'element-plus'; // 引入 Element Plus Switch 组件的样式
+import {ElSwitch} from 'element-plus'; // 引入 Element Plus Switch 组件的样式
 
 export default defineComponent({
     name: 'Theme',
     setup() {
         /* start——暗黑模式 */
         const isDark = useDark({
-            disableTransition: true,
+            disableTransition: false,
             valueDark: 'dark',
             valueLight: 'light',
         });
@@ -23,7 +23,7 @@ export default defineComponent({
         return () => (
             <ElSwitch
                 v-model={isDark.value}
-                style={{ marginRight: '10px' }}
+                style={{marginRight: '10px'}}
                 active-action-icon={Moon}
                 inactive-action-icon={Sunny}
                 inlinePrompt

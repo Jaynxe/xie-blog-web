@@ -3,8 +3,9 @@ import adminHeader from "@/components/admin/adminHeader.vue";
 import adminAside from "@/components/admin/adminAside.vue";
 import copyright from "@/components/copyright";
 import adminTabs from "@/components/admin/adminTabs.vue";
-import "element-plus/theme-chalk/el-backtop.css"; // 引入Element Plus样式
-import { useCollapseStore } from "@/stores/collapse";
+import "element-plus/theme-chalk/el-backtop.css";
+import {useCollapseStore} from "@/stores/collapse";
+
 const collapseStore = useCollapseStore();
 </script>
 
@@ -19,8 +20,8 @@ const collapseStore = useCollapseStore();
     <el-container class="overflow-auto">
       <!-- 侧边栏 -->
       <el-aside
-        class="transition-all duration-200 ease overflow-hidden"
-        :width="collapseStore.isCollapse ? '64px' : '200px'"
+          class="transition-all duration-200 ease overflow-hidden"
+          :width="collapseStore.isCollapse ? '64px' : '200px'"
       >
         <adminAside></adminAside>
       </el-aside>
@@ -37,10 +38,10 @@ const collapseStore = useCollapseStore();
 
           <!-- 引入回到顶部按钮 -->
           <el-backtop
-            target="main"
-            :visibility-height="300"
-            :right="50"
-            :bottom="50"
+              target="main"
+              :visibility-height="300"
+              :right="50"
+              :bottom="50"
           >
             <i class="iconfont icon-huidaodingbu" style="font-size: 24px"></i>
           </el-backtop>
@@ -60,18 +61,22 @@ const collapseStore = useCollapseStore();
   /* 隐藏滚动条 */
   scrollbar-width: none;
 }
+
 .fade-leave-to {
   opacity: 0;
   transform: translatex(30px);
 }
+
 .fade-enter-active {
   transform: translatex(-30px);
   opacity: 0;
 }
+
 .fade-enter-to {
   transform: translatex(0px);
   opacity: 1;
 }
+
 .fade-leave-active,
 .fade-enter-active {
   transition: all 0.3s ease-out;

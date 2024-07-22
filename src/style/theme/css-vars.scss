@@ -1,20 +1,21 @@
-/* 亮色模式 */
+/* 亮色模式样式 */
 html.light {
   --login-bg: #fff;
   --login-bg-form: #fff;
   --login-bg-gradient: linear-gradient(
-    to right,
-    #d8e4fb,
-    #8bb3ed
+                  to right,
+                  #d8e4fb,
+                  #8bb3ed
   ); /* 浅色主题下的渐变背景 */
 
   /* 进度条背景色 */
-  --nprogress-color:rgb(99, 248, 176);
+  --nprogress-color: rgb(99, 248, 176);
 
-  --tab-text-color:#6B7280;
-  
+  --tab-text-color: #6B7280;
+
 }
-/* 暗色模式演示 */
+
+/* 暗色模式样式 */
 html.dark {
   /* 自定义深色背景颜色 */
   --el-bg-color: rgb(30, 41, 59);
@@ -23,20 +24,21 @@ html.dark {
   --el-fill-color: rgb(15, 23, 42);
 
   --login-bg: rgb(15, 23, 42);
-  --login-bg-form: rgb(20, 28, 48); /* 更深的背景色 */
+  --login-bg-form: rgb(30, 41, 59); /* 更深的背景色 */
   --login-bg-gradient: linear-gradient(
-    to right,
-    #2c3e50,
-    #4ca1af
+                  to right,
+                  #2c3e50,
+                  #4ca1af
   ); /* 深色主题下的渐变背景 */
 
   /* 暗色模式进度条背景色 */
-  --nprogress-color:rgb(5, 74, 192);
+  --nprogress-color: rgb(5, 74, 192);
   --tab-text-color: #94A3B8;
 
-  .el-calendar{
-    background-color: rgb(15, 23, 42);
+  .el-calendar {
+    background-color: var(--el-fill-color);
   }
+
   /* start-登录页暗色模式 */
   .login-page {
     background: var(--login-bg-gradient);
@@ -45,26 +47,19 @@ html.dark {
   .login-container,
   .reset-container,
   .register-container {
-    background-color: var(--login-bg-form);
+    background-color: var(--login-bg);
     color: #ffffff; /* 确保文本颜色在深色背景下清晰 */
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .title,
-  .forgot-password {
-    color: #ffffff;
-  }
   .el-input {
-    background-color: var(--el-bg-color);
+    background-color: var(--login-bg-form);
   }
-  // .el-radio-button{
-  //   background-color: var(--el-bg-color);
-  // }
+
   .input-group {
     input {
-      background-color: var(--el-bg-color);
+      background-color: var(--login-bg-form);
       border: 1px solid #555;
-      color: #ffffff;
     }
 
     .placeholder {
@@ -86,6 +81,7 @@ html.dark {
       background-color: #3271ad;
     }
   }
+
   /* end-登录页暗色模式 */
 
   /*  start-后台主页的暗色样式 */
@@ -100,6 +96,7 @@ html.dark {
       color: #ffffff;
       background-color: #3e8ef7 !important;
       border-radius: 4px;
+
       span {
         color: #ffffff;
       }
@@ -122,14 +119,17 @@ html.dark {
       }
     }
   }
- .el-footer{
-   background-color: var(--el-fill-color);
- }
+
+  .el-footer {
+    background-color: var(--el-fill-color);
+  }
+
   .gvb-tabs,
   .copyright {
     background-color: var(--el-fill-color);
-    
+
   }
+
   /*  end-后台主页的暗色样式 */
 
   // 表格的暗色样式
@@ -138,7 +138,9 @@ html.dark {
       background-color: var(--el-bg-color) !important;
       color: #fff;
     }
-    border-color:var(--el-bg-color);
+
+    border-color: var(--el-bg-color);
+
     .el-table__row {
       background-color: var(--el-fill-color) !important;
     }
