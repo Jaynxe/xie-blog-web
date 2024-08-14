@@ -1,28 +1,26 @@
 <template>
   <div
-      class="gvb-tabs h-12 w-full border-b border-l border-solid border-b-gray-500/20 border-l-gray-500/20"
+    class="gvb-tabs h-12 w-full border-b border-l border-solid border-b-gray-500/20 border-l-gray-500/20"
   >
     <div class="tabs-container flex items-center justify-between">
       <div class="tabs-header">
         <el-tabs
-            v-model="activeValue"
-            type="card"
-            @tab-remove="removeTab"
-            @tab-click="changeTab"
+          v-model="activeValue"
+          type="card"
+          @tab-remove="removeTab"
+          @tab-click="changeTab"
         >
           <el-tab-pane
-              v-for="item in tabs"
-              :key="item.name"
-              :label="item.title"
-              :name="item.name"
-              :closable="!item.fixed"
+            v-for="item in tabs"
+            :key="item.name"
+            :label="item.title"
+            :name="item.name"
+            :closable="!item.fixed"
           >
             <template #label>
               <span
-                  :class="
-                  activeValue === item.name
-                    ? 'text-active'
-                    : 'text-normal'
+                :class="
+                  activeValue === item.name ? 'text-active' : 'text-normal'
                 "
               >
                 {{ item.title }}
@@ -32,22 +30,22 @@
         </el-tabs>
       </div>
       <el-button
-          @click="removeAllTabs"
-          type="text"
-          class="mb-2 mr-2"
-          :icon="Delete"
-      >全部删除
-      </el-button
-      >
+        @click="removeAllTabs"
+        type="primary"
+        plain
+        class="mb-2 mr-2"
+        :icon="Delete"
+        >全部删除
+      </el-button>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {ref, watch, onMounted} from "vue";
-import {useRoute, useRouter} from "vue-router";
-import type {TabPaneName} from "element-plus";
-import {Delete} from "@element-plus/icons-vue";
+import { ref, watch, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import type { TabPaneName } from "element-plus";
+import { Delete } from "@element-plus/icons-vue";
 
 interface TabType {
   name: string;
@@ -59,7 +57,7 @@ const route = useRoute();
 const router = useRouter();
 
 const defaultTabs: TabType[] = [
-  {name: "adminHome", title: "首页", fixed: true},
+  { name: "adminHome", title: "首页", fixed: true },
 ];
 
 const tabs = ref<TabType[]>([]);
@@ -78,7 +76,7 @@ watch(route, (newRoute) => {
 
 // 点击标签页后进行路由跳转
 const changeTab = (tab: { paneName: any }) => {
-  router.push({name: tab.paneName});
+  router.push({ name: tab.paneName });
 };
 
 // 删除标签页
@@ -92,7 +90,7 @@ const removeTab = (targetName: TabPaneName) => {
       const newIndex = index === tabs.value.length ? index - 1 : index;
       if (newIndex >= 0) {
         activeValue.value = tabs.value[newIndex].name;
-        router.push({name: tabs.value[newIndex].name});
+        router.push({ name: tabs.value[newIndex].name });
       }
     }
     saveTabsToSessionStorage();
@@ -103,7 +101,7 @@ const removeTab = (targetName: TabPaneName) => {
 const removeAllTabs = () => {
   tabs.value = tabs.value.filter((tab) => tab.fixed);
   activeValue.value = tabs.value[0].name;
-  router.push({name: tabs.value[0].name});
+  router.push({ name: tabs.value[0].name });
   saveTabsToSessionStorage();
 };
 
@@ -125,7 +123,7 @@ const loadTabsFromSessionStorage = () => {
 // 添加标签页
 const addTab = (name: string, title: string) => {
   if (!tabs.value.find((tab) => tab.name === name)) {
-    tabs.value.push({name, title});
+    tabs.value.push({ name, title });
   }
 };
 

@@ -4,8 +4,8 @@ import {createPinia} from 'pinia'
 import App from './App.vue'
 import router from './router'
 import "element-plus/theme-chalk/dark/css-vars.css"
-import "@/style/theme/css-vars.scss"
-import "@/style/index.scss"
+import "@/styles/theme/css-vars.scss"
+import "@/styles/index.scss"
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 

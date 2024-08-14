@@ -93,3 +93,6 @@ export interface ModifyUser {
     sex: string;
     avatar: string;
 }
+
+ // 定义联合类型，确保 selectedLoginType 的值只能是这些字符串之一
+export type LoginType = 'password' | 'email' | 'forgetPassword' | 'register';

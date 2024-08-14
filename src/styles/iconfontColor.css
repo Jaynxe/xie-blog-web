@@ -1,0 +1,25 @@
+@font-face {
+    font-family: "iconfont"; /* Project id 4651481 */
+    /* Color fonts */
+    src: 
+         url('//at.alicdn.com/t/c/font_4651481_fsoapdmt275.woff2?t=1723472939201') format('woff2'),
+         url('//at.alicdn.com/t/c/font_4651481_fsoapdmt275.woff?t=1723472939201') format('woff'),
+         url('//at.alicdn.com/t/c/font_4651481_fsoapdmt275.ttf?t=1723472939201') format('truetype');
+  }
+  
+  .iconfont {
+    font-family: "iconfont" !important;
+    font-size: 16px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  .icon-sun:before {
+    content: "\e616";
+  }
+  
+  .icon-weather-color_moon-stars:before {
+    content: "\e6d4";
+  }
+  

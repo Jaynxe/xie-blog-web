@@ -2,13 +2,12 @@
 import {ref, computed, reactive} from "vue";
 import {ElMessage, type FormInstance, type FormRules} from "element-plus";
 import {Lock, Promotion, Message, User} from "@element-plus/icons-vue";
-import {useRouter} from "vue-router";
 import {generateRegisterCode, registerUser} from "@/api";
 import {type RegisterUser} from "@/types";
 import theme from "@/components/theme"
 import {errorCode} from "@/utils/errcode";
-
-const router = useRouter();
+import { useLoginTypeStore } from "@/stores/loginType";
+const loginTypeStore = useLoginTypeStore();
 const registerForm = reactive<RegisterUser>({
   name: "",
   email: "",
@@ -121,7 +120,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       const res = await registerUser(registerForm);
       if (res.data.status === 0) {
         showMessage("用户注册成功", "success");
-        await router.push({name: "login"});
+        goBack();
       }
     } else {
       showMessage("请检查表单的输入", "error");
@@ -133,7 +132,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 
 const goBack = () => {
-  router.push({path: "/login"});
+  loginTypeStore.toggleLoginType('password')
 };
 </script>
 
@@ -150,12 +149,6 @@ const goBack = () => {
           <el-divider/>
 
           <el-form class="form-main w-full" :model="registerForm" :rules="rules" ref="formRef" label-width="1px">
-            <el-form-item prop="sex">
-              <el-radio-group v-model="registerForm.sex" size="large">
-                <el-radio-button :value="'男'" label="男"/>
-                <el-radio-button :value="'女'" label="女"/>
-              </el-radio-group>
-            </el-form-item>
             <el-form-item prop="name">
               <el-input v-model="registerForm.name" placeholder="姓名" size="large" clearable>
                 <template #prefix>
@@ -240,16 +233,22 @@ const goBack = () => {
         </div>
       </div>
     </div>
+    <div class="footer fixed bottom-0 left-0 w-full py-2 text-center">
+      <el-link
+        href="https://beian.miit.gov.cn/"
+        target="_blank"
+        type="default"
+        class="footerLink text-base inline-flex items-center"
+      >
+        <img src="/src/assets/img/beian.png" alt="备案图片" class="h-4 mr-1" />
+        <span>粤ICP备2024184954号-1</span>
+      </el-link>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.register-page {
-  background: var(--login-bg-gradient);
-}
-
 .register-container {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
 }
-
 </style>

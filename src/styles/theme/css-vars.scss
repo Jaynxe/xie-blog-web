@@ -1,39 +1,59 @@
 /* 亮色模式样式 */
 html.light {
   --login-bg: #fff;
-  --login-bg-form: #fff;
+  --login-bg-form: #fafafa;
   --login-bg-gradient: linear-gradient(
-                  to right,
-                  #d8e4fb,
-                  #8bb3ed
+    to right,
+    #d8e4fb,
+    #8bb3ed
   ); /* 浅色主题下的渐变背景 */
 
   /* 进度条背景色 */
   --nprogress-color: rgb(99, 248, 176);
 
-  --tab-text-color: #6B7280;
+  --tab-text-color: #6b7280;
 
+  .el-input {
+    .el-input__wrapper{
+      background-color: var(--login-bg-form);
+    }
+  }
+  .input-group {
+    input {
+      background-color: var(--login-bg-form);
+    }
+
+    .placeholder {
+      color: #888;
+    }
+
+    input:focus + .placeholder,
+    input:not(:placeholder-shown) + .placeholder {
+      color: #ffffff;
+    }
+  }
+  
 }
 
 /* 暗色模式样式 */
 html.dark {
   /* 自定义深色背景颜色 */
   --el-bg-color: rgb(30, 41, 59);
-  --el-bg-color-overlay: rgb(40, 51, 69);
-  --el-fill-color-light: rgb(15, 23, 42);
-  --el-fill-color: rgb(15, 23, 42);
+  --el-bg-color-overlay: rgb(40, 51, 69); //覆盖层的元素的背景色(例如:弹出框)
+  --el-fill-color-light: rgb(15, 23, 42); // 轻填充色
+  --el-fill-color: rgb(15, 23, 42); // 正常填充色
 
-  --login-bg: rgb(15, 23, 42);
-  --login-bg-form: rgb(30, 41, 59); /* 更深的背景色 */
+  --login-bg: rgb(15, 23, 42); // 登录容器的背景色
+  --login-bg-form: rgb(30, 41, 59); // 登录容器的表单的背景色
   --login-bg-gradient: linear-gradient(
-                  to right,
-                  #2c3e50,
-                  #4ca1af
+    to right,
+    #2c3e50,
+    #4ca1af
   ); /* 深色主题下的渐变背景 */
 
   /* 暗色模式进度条背景色 */
   --nprogress-color: rgb(5, 74, 192);
-  --tab-text-color: #94A3B8;
+  --tab-text-color: #94a3b8;
 
   .el-calendar {
     background-color: var(--el-fill-color);
@@ -127,7 +147,6 @@ html.dark {
   .gvb-tabs,
   .copyright {
     background-color: var(--el-fill-color);
-
   }
 
   /*  end-后台主页的暗色样式 */
@@ -145,5 +164,4 @@ html.dark {
       background-color: var(--el-fill-color) !important;
     }
   }
-
 }

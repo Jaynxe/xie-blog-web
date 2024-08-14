@@ -168,5 +168,6 @@ watch(route, (newRoute) => {
 
 .aside-menu {
   border-right: 0;
+  padding: 4px 6px;
 }
 </style>
