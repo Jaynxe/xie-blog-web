@@ -15,7 +15,7 @@ const pathSrc = path.resolve(__dirname, 'src')
 
 export default defineConfig(configEnv=> {
   const viteEnv = loadEnv(configEnv.mode, process.cwd());
-  const baseUrl = viteEnv.VITE_SERVICE_BASE_URL //后端的地址
+  const baseUrl = viteEnv.VITE_BASE_URL //后端的地址
   return {
     envPrefix: ["VITE_"],
     plugins: [

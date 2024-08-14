@@ -1,8 +1,7 @@
-import {defineComponent} from 'vue';
-import {useDark, useToggle} from '@vueuse/core';
-import {Moon, Sunny} from '@element-plus/icons-vue';
+import { defineComponent } from 'vue';
+import { useDark, useToggle } from '@vueuse/core';
 import 'element-plus/es/components/switch/style/css';
-import {ElSwitch} from 'element-plus'; // 引入 Element Plus Switch 组件的样式
+import { ElSwitch } from 'element-plus'; // 引入 Element Plus Switch 组件的样式
 
 export default defineComponent({
     name: 'Theme',
@@ -20,13 +19,14 @@ export default defineComponent({
             toggleDark();
         };
 
+
         return () => (
             <ElSwitch
                 v-model={isDark.value}
-                style={{marginRight: '10px'}}
-                active-action-icon={Moon}
-                inactive-action-icon={Sunny}
-                inlinePrompt
+                size='large'
+                active-action-icon={<i class="iconfont icon-weather-color_moon-stars"></i>}
+                inactive-action-icon={<i class="iconfont icon-sun"></i>}
+                inline-prompt
                 onChange={toggleTheme}
             />
         );

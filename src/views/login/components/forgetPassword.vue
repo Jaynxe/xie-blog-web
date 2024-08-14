@@ -2,13 +2,12 @@
 import {ref, computed, reactive} from "vue";
 import {ElMessage, type FormInstance, type FormRules} from "element-plus";
 import {Lock, Promotion, Message} from "@element-plus/icons-vue";
-import {useRouter} from "vue-router";
 import theme from "@/components/theme"
 import {generateResetPasswordCode, submitResetPasswordForm} from "@/api";
 import {type ResetPassword} from "@/types";
 import {errorCode} from "@/utils/errcode";
-
-const router = useRouter();
+import { useLoginTypeStore } from "@/stores/loginType";
+const loginTypeStore = useLoginTypeStore();
 
 const resetPasswordForm = reactive<ResetPassword>({
   email: "",
@@ -111,7 +110,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
       const res = await submitResetPasswordForm(resetPasswordForm);
       if (res.data.status === 0) {
         showMessage("密码重置成功", "success");
-        await router.push({name: "login"});
+        goBack();
       }
     } else {
       showMessage("请检查表单的输入", "error");
@@ -123,7 +122,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
 
 
 const goBack = () => {
-  router.push({path: "/login"});
+  loginTypeStore.toggleLoginType('password')
 };
 </script>
 
@@ -203,13 +202,21 @@ const goBack = () => {
         </div>
       </div>
     </div>
+    <div class="footer fixed bottom-0 left-0 w-full py-2 text-center">
+      <el-link
+        href="https://beian.miit.gov.cn/"
+        target="_blank"
+        type="default"
+        class="footerLink text-base inline-flex items-center"
+      >
+        <img src="/src/assets/img/beian.png" alt="备案图片" class="h-4 mr-1" />
+        <span>粤ICP备2024184954号-1</span>
+      </el-link>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.reset-password-page {
-  background: var(--login-bg-gradient);
-}
 
 .reset-container {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
